@@ -1,0 +1,112 @@
+.kanban-board-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 1rem;
+}
+
+.kanban-board {
+  display: flex;
+  gap: 1.5rem;
+  height: 100%;
+  min-width: min-content;
+}
+
+.kanban-column {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.kanban-column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 2px solid var(--bg-main);
+}
+
+.kanban-count {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+.kanban-droppable {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: background-color var(--transition-fast);
+}
+
+.kanban-droppable.dragging-over {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.kanban-card {
+  background-color: var(--bg-main);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  cursor: grab;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.kanban-card:active {
+  cursor: grabbing;
+}
+
+.kanban-card.dragging {
+  box-shadow: var(--shadow-lg), 0 0 0 2px var(--primary);
+  border-color: var(--primary);
+  opacity: 0.9;
+}
+
+.kanban-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.kanban-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border-color);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: var(--bg-surface);
+}

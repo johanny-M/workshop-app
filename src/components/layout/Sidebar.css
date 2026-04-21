@@ -1,0 +1,155 @@
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-color);
+  z-index: 10;
+  transition: width var(--transition-normal);
+}
+
+.sidebar-header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.logo-icon {
+  color: var(--primary);
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-full);
+  color: var(--sidebar-text);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.nav-link:hover {
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+  transform: translateX(4px);
+}
+
+.nav-link.active {
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+  border-right: none;
+}
+
+.nav-icon {
+  margin-right: 0.25rem;
+}
+
+.sub-nav {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--border-color);
+  margin-top: 0.25rem;
+  gap: 0.25rem;
+}
+
+.sub-nav-link {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  color: var(--sidebar-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.sub-nav-link::before {
+  content: '';
+  position: absolute;
+  left: -1rem;
+  top: 50%;
+  width: 0.75rem;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.sub-nav-link:hover {
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+}
+
+.sub-nav-link.active {
+  background-color: var(--bg-surface-hover);
+  color: var(--sidebar-active-text);
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color-light);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.user-profile:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background-color: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}

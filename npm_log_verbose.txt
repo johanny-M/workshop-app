@@ -1,0 +1,25 @@
+npm verbose cli /home/fedora_j/.nvm/versions/node/v24.13.0/bin/node /home/fedora_j/.nvm/versions/node/v24.13.0/bin/npm
+npm info using npm@11.6.2
+npm info using node@v24.13.0
+npm verbose title npm install react react-dom vite @vitejs/plugin-react typescript @types/react @types/react-dom
+npm verbose argv "install" "--loglevel" "verbose" "--no-audit" "--legacy-peer-deps" "react" "react-dom" "vite" "@vitejs/plugin-react" "typescript" "@types/react" "@types/react-dom"
+npm verbose logfile logs-max:10 dir:/home/fedora_j/.npm/_logs/2026-04-18T06_53_10_325Z-
+npm verbose logfile /home/fedora_j/.npm/_logs/2026-04-18T06_53_10_325Z-debug-0.log
+npm http cache https://registry.npmjs.org/react 44ms (cache hit)
+npm http cache https://registry.npmjs.org/react-dom 51ms (cache hit)
+npm http cache https://registry.npmjs.org/@types%2freact 10ms (cache hit)
+npm http cache https://registry.npmjs.org/@types%2freact-dom 5ms (cache hit)
+npm http cache https://registry.npmjs.org/@vitejs%2fplugin-react 2ms (cache hit)
+npm http cache https://registry.npmjs.org/typescript 51ms (cache hit)
+npm http cache https://registry.npmjs.org/vite 150ms (cache hit)
+
+removed 1 package in 1s
+
+12 packages are looking for funding
+  run `npm fund` for details
+npm verbose cwd /home/fedora_j/.gemini/antigravity/scratch/workshop-app
+npm verbose os Linux 6.19.8-200.fc43.x86_64
+npm verbose node v24.13.0
+npm verbose npm  v11.6.2
+npm verbose exit 0
+npm info ok
