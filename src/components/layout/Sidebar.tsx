@@ -5,8 +5,10 @@ import './Sidebar.css';
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/projects', label: 'Projects', icon: Briefcase },
-  { path: '/production', label: 'Production', icon: ShoppingCart },
+  { path: '/projects', label: 'Projects', icon: Briefcase, subItems: [
+    { path: '/projects', label: 'Overview' },
+    { path: '/production', label: 'Production' }
+  ]},
   { path: '/supplies', label: 'Supplies', icon: Package, subItems: [
     { path: '/supplies-manage', label: 'Manage' },
     { path: '/supplies', label: 'Request' }

@@ -3,12 +3,12 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import { useStore, ProjectColumn, Project } from '../store/useStore';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Plus, MoreHorizontal, Paperclip, MessageSquare, Calendar, LayoutGrid, List, Search, Filter, ChevronLeft, ChevronRight, Check, Link2, Tag, Bookmark, Share, BarChart2, Cloud, Settings, Pause, Folder, Smartphone, Clock, Type } from 'lucide-react';
+import { Plus, MoreHorizontal, Paperclip, MessageSquare, Calendar, LayoutGrid, List, Search, Filter, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import './Projects.css';
 
 const Projects: React.FC = () => {
   const { projectColumns, projects, updateProjectColumn, addProjectColumn } = useStore();
-  const [view, setView] = useState<'kanban' | 'calendar' | 'list' | 'production'>('kanban');
+  const [view, setView] = useState<'kanban' | 'calendar' | 'list'>('kanban');
   const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
   const [newColumnName, setNewColumnName] = useState('');
 
@@ -329,128 +329,6 @@ const Projects: React.FC = () => {
     );
   };
 
-  const renderProductionView = () => {
-    const prodTasks = [
-      { id: 1, title: 'Develop Processing Plans', assigned: 'Clair Burge', date: '12.11.23', color: 'pink', progress: 2, total: 4, icon: 'bookmark', avatar: 1 },
-      { id: 6, title: 'Develop Strategic Plans', assigned: 'Christian Bass', date: '15.11.23', color: 'pink', progress: 2, total: 4, avatar: 4 },
-      { id: 11, title: 'Build Relationships', assigned: 'Craig Curry', date: '21.11.23', color: 'grey', progress: 1, total: 4, avatar: 2 },
-      { id: 16, title: 'Create Training Programs', assigned: 'Brandon Crawford', date: '23.11.23', color: 'grey', progress: 3, total: 4, avatar: 6 },
-      
-      { id: 2, title: 'Resolve Payment Disputes', assigned: 'Clair Burge', date: '8.11.23', color: 'purple', progress: 3, total: 4, avatar: 1 },
-      { id: 7, title: 'Provide Customer Service', assigned: 'Christian Bass', date: '9.11.23', color: 'purple', progress: 3, total: 4, icon: 'bookmark', avatar: 4 },
-      { id: 12, title: 'Resolve Disputes', assigned: 'Brandon Crawford', date: '20.11.23', color: 'grey', progress: 3, total: 4, avatar: 6 },
-      { id: 17, title: 'Develop Processing Plans', assigned: 'Helna Julie', date: '22.11.23', color: 'purple', progress: 2, total: 4, icon: 'bookmark', avatar: 3 },
-      
-      { id: 3, title: 'Train Employees', assigned: 'Craig Curry', date: '8.11.23', color: 'purple', progress: 1, total: 4, avatar: 2 },
-      { id: 8, title: 'Improve Efficiency', assigned: 'Christian Bass', date: '10.11.23', color: 'grey', progress: 4, total: 4, avatar: 4 },
-      { id: 13, title: 'Report To Management', assigned: 'Clair Burge', date: '14.11.23', color: 'purple', progress: 2, total: 4, avatar: 1 },
-      { id: 18, title: 'Recruit New', color: 'purple', progress: 1, total: 4 },
-      
-      { id: 4, title: 'Recruit New Talent', assigned: 'Helna Julie', date: '4.11.23', color: 'yellow', progress: 2, total: 3, avatar: 3 },
-      { id: 9, title: 'Market Services', assigned: 'Clair Burge', date: '5.11.23', color: 'yellow', progress: 2, total: 3, avatar: 1 },
-      { id: 14, title: 'empty', type: 'placeholder', color: 'striped' },
-      { id: 15, title: 'Launch Marketing Campaigns', assigned: 'Brandon Crawford', date: '5.02.24', color: 'grey', progress: 1, total: 4, icon: 'pause', avatar: 6 },
-      { id: 19, title: 'Oversee Operations', assigned: 'Helna Julie', date: '6.12.23', color: 'grey', progress: 3, total: 4, avatar: 3 },
-      { id: 5, title: 'Oversee Operations', assigned: 'Christian Bass', date: '1.12.23', color: 'grey', progress: 3, total: 4, avatar: 4 },
-    ];
-
-    return (
-      <div className="prod-module fade-in relative h-full">
-        <div className="prod-header flex-col lg:flex-row gap-6">
-           <div className="prod-title-area">
-              <span className="text-muted text-sm font-semibold tracking-wide uppercase">Task Schedule</span>
-              <h2 className="text-3xl font-extrabold mt-1">Daily Operation</h2>
-              
-              <div className="prod-filters mt-6 gap-4">
-                 <div className="prod-pill dark">
-                    Still Running <span className="prod-badge yellow">32</span>
-                 </div>
-                 <div className="prod-pill light">
-                    Disqualified <span className="prod-badge grey">4</span>
-                 </div>
-                 
-                 <div className="flex gap-2 ml-2">
-                    <button className="prod-icon-btn bg-dark"><LayoutGrid size={14}/></button>
-                    <button className="prod-icon-btn bg-light"><Link2 size={14}/></button>
-                    <button className="prod-icon-btn bg-light"><Tag size={14}/></button>
-                    <button className="prod-icon-btn bg-light"><Bookmark size={14}/></button>
-                    <button className="prod-icon-btn bg-light"><Share size={14}/></button>
-                 </div>
-              </div>
-           </div>
-
-           <div className="prod-stats gap-8">
-               <div className="stat-item">
-                  <span className="text-muted text-xs font-semibold uppercase mb-1 block">Week's Tasks</span>
-                  <span className="text-4xl font-light">132</span>
-               </div>
-               <div className="stat-item">
-                  <span className="text-muted text-xs font-semibold uppercase mb-1 block">Pending Approval</span>
-                  <span className="text-4xl font-light">34</span>
-               </div>
-               <div className="stat-item">
-                  <span className="text-muted text-xs font-semibold uppercase mb-1 block">Employees Involved</span>
-                  <span className="text-4xl font-light">22</span>
-               </div>
-               
-               <div className="flex gap-2 ml-4">
-                  <button className="prod-icon-btn outline border border-color"><BarChart2 size={16}/></button>
-                  <button className="prod-icon-btn outline border border-color"><Cloud size={16}/></button>
-                  <button className="prod-icon-btn outline border border-color"><Settings size={16}/></button>
-               </div>
-           </div>
-        </div>
-        
-        <div className="prod-masonry-container custom-scrollbar">
-           <div className="prod-masonry">
-               {prodTasks.map(task => (
-                 <div key={task.id} className={`prod-card ${task.color}`}>
-                   {task.type !== 'placeholder' && (
-                     <>
-                        <div className="prod-card-action"><MoreHorizontal size={18}/></div>
-                        <h4 className="prod-card-title">{task.title}</h4>
-                        
-                        <div className="prod-progress">
-                          {Array.from({length: task.total!}).map((_, i) => (
-                             <div key={i} className={`prod-progress-bar ${i < task.progress! ? 'active' : ''}`}></div>
-                          ))}
-                        </div>
-                        
-                        {(task.assigned) && (
-                          <div className="prod-avatar-row mt-6">
-                            <img src={`https://i.pravatar.cc/100?img=${task.avatar}`} alt={task.assigned} className="prod-avatar" />
-                            <div className="prod-user-info">
-                              <span className="prod-user-name">{task.assigned}</span>
-                              <span className="prod-user-date">{task.date}</span>
-                            </div>
-                          </div>
-                        )}
-                        
-                        {task.icon === 'bookmark' && (
-                          <div className="prod-card-icon"><Bookmark size={12} fill="currentColor"/></div>
-                        )}
-                        {task.icon === 'pause' && (
-                          <div className="prod-card-icon bg-light text-muted" style={{backgroundColor: '#ececec'}}><Pause size={12} className="text-main" fill="currentColor"/></div>
-                        )}
-                     </>
-                   )}
-                 </div>
-               ))}
-           </div>
-        </div>
-
-        {/* Floating Bottom Navigation */}
-        <div className="prod-floating-bar">
-           <button className="prod-icon-btn outline border border-transparent hover-bg-surface-hover"><Folder size={16}/></button>
-           <button className="prod-icon-btn outline border border-transparent hover-bg-surface-hover"><Smartphone size={16}/></button>
-           <button className="prod-icon-btn bg-dark scale-110 shadow-md"><Plus size={16}/></button>
-           <button className="prod-icon-btn outline border border-transparent hover-bg-surface-hover"><Clock size={16}/></button>
-           <button className="prod-icon-btn outline border border-transparent hover-bg-surface-hover"><Type size={16}/></button>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="projects-container fade-in flex-col h-full overflow-hidden">
       <div className="projects-header">
@@ -469,9 +347,6 @@ const Projects: React.FC = () => {
             </button>
             <button className={`view-toggle ${view === 'list' ? 'active' : ''}`} onClick={() => setView('list')}>
                <List size={16} /> List
-            </button>
-            <button className={`view-toggle ${view === 'production' ? 'active' : ''}`} onClick={() => setView('production')}>
-               <LayoutGrid size={16} /> Production
             </button>
           </div>
           
@@ -497,7 +372,6 @@ const Projects: React.FC = () => {
         {view === 'kanban' && renderKanbanView()}
         {view === 'list' && renderListView()}
         {view === 'calendar' && renderCalendarView()}
-        {view === 'production' && renderProductionView()}
       </div>
 
       {isColumnModalOpen && (

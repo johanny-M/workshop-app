@@ -10,6 +10,7 @@ import Clients from './pages/Clients';
 import Revenue from './pages/Revenue';
 import Saving from './pages/Saving';
 import Projects from './pages/Projects';
+import Production from './pages/Production';
 
 import Login from './pages/Login';
 import { useStore } from './store/useStore';
@@ -26,7 +27,7 @@ const App: React.FC = () => {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
-          <Route path="production" element={<Orders />} />
+          <Route path="production" element={<Production />} />
           <Route path="supplies/*" element={<Inventory />} />
           <Route path="crafters" element={<div className="fade-in p-6"><h1 className="text-2xl font-bold">Crafters Network</h1></div>} />
           <Route path="clients" element={<Clients />} />
