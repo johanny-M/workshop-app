@@ -1,220 +1,263 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useStore } from '../store/useStore';
-import { ArrowUpRight, ArrowDownRight, Package, Truck, Box, Users, DollarSign } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { ClipboardList, ClipboardPaste, TrendingUp, TrendingDown, Users, CheckCircle, RefreshCw } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, CartesianGrid } from 'recharts';
+import CalendarWidget from '../components/dashboard/CalendarWidget';
 import './Dashboard.css';
 
-const revenueData = [
-  { month: 'Jan', income: 7000, expenses: 2000 },
-  { month: 'Feb', income: 7200, expenses: 2000 },
-  { month: 'Mar', income: 6000, expenses: 1000 },
-  { month: 'Apr', income: 6500, expenses: 1500 },
-  { month: 'May', income: 5800, expenses: 1000 },
-  { month: 'June', income: 6300, expenses: 1800 },
-  { month: 'July', income: 5700, expenses: 1500 },
-  { month: 'Aug', income: 6500, expenses: 2500 },
-  { month: 'Sep', income: 5900, expenses: 900 },
-  { month: 'Oct', income: 6400, expenses: 1000 },
-  { month: 'Nov', income: 6100, expenses: 1200 },
-  { month: 'Dec', income: 6000, expenses: 1900 },
+const baseOverviewProjects = [
+  { name: 'Pharmik MVP', percentage: 50, date: '23/10/2025' },
+  { name: 'Budget Manage', percentage: 40, date: '23/10/2025' },
+  { name: 'Natura Care', percentage: 80, date: '23/10/2025' },
+  { name: 'BIRDEM', percentage: 34, date: '23/10/2025' },
 ];
 
-const efficiencyData = [
-  { name: 'Cancelled', value: 3, color: '#ef4444' },
-  { name: 'Delayed', value: 2, color: '#f59e0b' },
-  { name: 'In process', value: 34, color: '#eab308' },
-  { name: 'Shipping', value: 18, color: '#3b82f6' },
-  { name: 'Delivered', value: 43, color: '#10b981' },
-];
-
-const activeOrdersMock = [
-  { id: 'ORD-1024', client: 'Alex Harper', initial: 'A', product: 'Custom oak cupboard', dueDate: 'May 16', status: 'In production', revenue: 2000 },
-  { id: 'ORD-1023', client: 'Sophie Kim', initial: 'S', product: 'Velvet Lounge Sofa', dueDate: 'May 20', status: 'Pending', revenue: 1850 },
-  { id: 'ORD-1022', client: 'Noah Bennett', initial: 'N', product: 'Walnut Office Desk Set', dueDate: 'May 20', status: 'In production', revenue: 1200 },
-];
-
-const deliveriesMock = [
-  { title: 'Order Delivery to Riverside', date: 'Today • 11:35', icon: Truck },
-  { title: 'Order Delivery to Stone Bridge', date: 'May 4 • 14:35', icon: Truck },
-  { title: 'Order Delivery to Lake District', date: 'May 4 • 12:00', icon: Truck },
-  { title: 'New supplies to the Workshop', date: 'May 7 • 11:55', icon: Box },
-  { title: 'Order Delivery to Mapple St.', date: 'May 11 • 10:05', icon: Truck },
+const baseProjectOverviewData = [
+  { month: 'Jun', value: 35 },
+  { month: 'Jul', value: 42 },
+  { month: 'Aug', value: 25 },
+  { month: 'Sep', value: 50 }, 
+  { month: 'Oct', value: 38 },
+  { month: 'Nov', value: 32 },
+  { month: 'Dec', value: 45 },
 ];
 
 const Dashboard: React.FC = () => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Dynamic KPIs that react to the calendar's month
+  const { totalTasks, ongoingTasks, perfComplete, trendTasks, projects, chartData } = useMemo(() => {
+    const m = currentDate.getMonth(); // 0-11
+    
+    // Simple pseudo-random variations based on the month
+    const mMod = m % 6; 
+    const tTasks = 110 + m * 5 + (currentDate.getDate() % 5); // Add slight day variance
+    const oTasks = 20 + mMod;
+    const pComplete = Math.min(100, Math.max(20, 60 + (m - 5) * 4));
+    const tTrend = m > 5 ? '+4.1%' : '-1.2%';
+    
+    // Vary overview projects slightly
+    const mappedProjects = baseOverviewProjects.map(p => ({
+      ...p,
+      percentage: Math.min(100, Math.max(10, p.percentage + ((m - 4) * 5)))
+    }));
+
+    // Shift bar chart values slightly
+    const updatedChartData = baseProjectOverviewData.map((d, i) => ({
+      ...d,
+      value: Math.max(10, d.value + (m - 6) * 3 + (i % 2 === 0 ? 5 : -5))
+    }));
+
+    // Determine the highlighted month text
+    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+    return {
+      totalTasks: tTasks,
+      ongoingTasks: oTasks,
+      perfComplete: pComplete.toFixed(1),
+      trendTasks: tTrend,
+      projects: mappedProjects,
+      chartData: updatedChartData
+    };
+  }, [currentDate]);
+
+  const performanceData = [
+    { name: 'Complete', value: parseFloat(perfComplete), color: 'var(--success)' }, // Emerald Theme
+    { name: 'Remaining', value: 100 - parseFloat(perfComplete), color: 'var(--bg-surface-hover)' }
+  ];
+
   return (
-    <div className="dashboard-container fade-in">
-      <div className="dashboard-header-row mb-6">
-        <div>
-          <h1 className="text-2xl font-bold mb-1">Dashboard</h1>
-          <p className="text-muted text-sm">Key revenue, production and client activity for your business</p>
-        </div>
-        <div>
-          <select className="btn btn-secondary text-sm">
-            <option>Last Year</option>
-            <option>This Year</option>
-          </select>
-        </div>
-      </div>
+    <div className="dashboard-container fade-in flex flex-col gap-6">
       
-      <div className="metrics-grid mb-6">
-        <div className="kpi-card">
-          <div className="kpi-header text-muted text-sm flex items-center gap-2 mb-3">
-            <Package size={16} /> Total Orders
-          </div>
-          <div className="kpi-value-row">
-            <span className="kpi-main">925</span>
-            <span className="pnl-badge pnl-down"><ArrowDownRight size={14}/> -4.3%</span>
-          </div>
-        </div>
-        <div className="kpi-card">
-          <div className="kpi-header text-muted text-sm flex items-center gap-2 mb-3">
-            <Users size={16} /> Active Clients
-          </div>
-          <div className="kpi-value-row">
-            <span className="kpi-main">742</span>
-            <span className="pnl-badge pnl-up"><ArrowUpRight size={14}/> +2%</span>
-          </div>
-        </div>
-        <div className="kpi-card">
-          <div className="kpi-header text-muted text-sm flex items-center gap-2 mb-3">
-            <DollarSign size={16} /> Total Revenue
-          </div>
-          <div className="kpi-value-row">
-            <span className="kpi-main">$99.7k</span>
-            <span className="pnl-badge pnl-up"><ArrowUpRight size={14}/> +5.2%</span>
-          </div>
-        </div>
+      {/* 
+        CALENDAR WIDGET ROW 
+        Made prominent and full-width as requested "bigger than other KPI cards"
+      */}
+      <div className="calendar-row">
+         <CalendarWidget currentDate={currentDate} onMonthChange={setCurrentDate} />
       </div>
 
-      <div className="main-grid mb-6">
-        <div className="card revenues-card">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="font-semibold text-lg">Revenues and expenses</h2>
-            <button className="btn btn-secondary text-xs">View all →</button>
-          </div>
-          <div className="flex gap-6 mb-6">
-            <div>
-              <div className="text-sm text-muted flex items-center gap-2 mb-1"><span className="dot dot-purple"></span>Net income</div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-lg">$67,260.00</span>
-                <span className="pnl-badge pnl-up"><ArrowUpRight size={12}/> +5.2%</span>
+      <div className="dashboard-grid">
+        {/* Left Column */}
+        <div className="dashboard-col-left flex flex-col gap-6">
+          <div className="tasks-cards-row">
+            <div className="dashboard-card primary-task-card" style={{ backgroundColor: 'var(--success)' }}>
+              <div className="task-card-header">
+                <span className="task-card-title">Total Tasks</span>
+                <div className="task-icon-box primary-icon-box">
+                  <ClipboardList size={18} />
+                </div>
+              </div>
+              <div className="task-card-value">{totalTasks}</div>
+              <div className="task-card-trend trend-up">
+                <TrendingUp size={14} /> <span>{trendTasks} vs last month</span>
               </div>
             </div>
-            <div>
-              <div className="text-sm text-muted flex items-center gap-2 mb-1"><span className="dot dot-green"></span>Expenses</div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-lg">$32,523.00</span>
-                <span className="pnl-badge pnl-down"><ArrowDownRight size={12}/> -1.7%</span>
+
+            <div className="dashboard-card secondary-task-card">
+              <div className="task-card-header">
+                <span className="task-card-title">Ongoing Tasks</span>
+                <div className="task-icon-box secondary-icon-box">
+                  <ClipboardPaste size={18} />
+                </div>
+              </div>
+              <div className="task-card-value">{ongoingTasks}</div>
+              <div className="task-card-trend trend-down">
+                <TrendingDown size={14} /> <span>-3.5% vs last month</span>
               </div>
             </div>
           </div>
-          <div className="chart-container" style={{ height: '240px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueData} barSize={24}>
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--text-muted)' }} dy={10} />
-                <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px', border: 'none', backgroundColor: 'var(--bg-surface)', boxShadow: 'var(--shadow-md)' }} />
-                <Bar dataKey="income" stackId="a" fill="var(--primary)" radius={[0, 0, 4, 4]} />
-                <Bar dataKey="expenses" stackId="a" fill="#bbf7d0" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+
+          <div className="dashboard-card overview-card flex-1">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="card-title">On Overview</h2>
+              <div className="team-badge">
+                <Users size={14} /> Team Alpha
+              </div>
+            </div>
+            
+            {/* FIXED LEGEND ALIGNMENTS */}
+            <div className="overview-stats-row text-sm font-medium mb-4 flex items-center justify-between sm:justify-start gap-8">
+              <div className="stat-item flex flex-col">
+                <div className="flex items-center text-success mb-1">
+                  <span className="dot bg-success mr-2"></span>On going
+                </div>
+                <div className="text-xl font-bold text-main">42.08%</div>
+              </div>
+              <div className="stat-item flex flex-col">
+                <div className="flex items-center text-danger mb-1">
+                  <span className="dot bg-danger mr-2"></span>Pending
+                </div>
+                <div className="text-xl font-bold text-main">28.08%</div>
+              </div>
+              <div className="stat-item flex flex-col">
+                <div className="flex items-center text-warning mb-1">
+                  <span className="dot bg-warning mr-2"></span>Completed
+                </div>
+                <div className="text-xl font-bold text-main">12.08%</div>
+              </div>
+            </div>
+
+            <div className="segmented-progress-bar mb-8 overflow-hidden rounded-full">
+               {Array.from({ length: 42 }).map((_, i) => <div key={`p-${i}`} className="segment seg-success"></div>)}
+               <div className="segment seg-spacer"></div>
+               {Array.from({ length: 28 }).map((_, i) => <div key={`d-${i}`} className="segment seg-danger"></div>)}
+               <div className="segment seg-spacer"></div>
+               {Array.from({ length: 12 }).map((_, i) => <div key={`w-${i}`} className="segment seg-warning"></div>)}
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="overview-table w-full text-left text-sm font-medium">
+                <thead>
+                  <tr className="text-muted">
+                    <th className="pb-4 font-medium">Project Name</th>
+                    <th className="pb-4 font-medium">Project Percentage</th>
+                    <th className="pb-4 font-medium text-right">Due Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {projects.map((p, i) => (
+                    <tr key={i}>
+                      <td className="py-4">{p.name}</td>
+                      <td className="py-4 font-bold">{p.percentage}%</td>
+                      <td className="py-4 text-right text-muted">{p.date}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <div className="side-column">
-          <div className="card workshop-efficiency-card">
-            <h2 className="font-semibold text-base mb-1">Workshop Efficiency</h2>
-            <p className="text-xs text-muted mb-4">All current processes</p>
-            <div className="flex items-center">
-              <div className="pie-container" style={{ width: '120px', height: '120px', position: 'relative' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie data={efficiencyData} innerRadius={42} outerRadius={55} paddingAngle={2} dataKey="value" stroke="none">
-                      {efficiencyData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className="pie-center-label">
-                  <span className="font-bold text-xl">95%</span>
-                  <span className="text-xs text-muted">Overall</span>
-                </div>
-              </div>
-              <div className="efficiency-legend ml-6 flex-1">
-                {efficiencyData.map(item => (
-                  <div key={item.name} className="flex justify-between text-xs mb-2">
-                    <span className="flex items-center gap-2 text-muted"><span className="dot" style={{ backgroundColor: item.color }}></span> {item.name}</span>
-                    <span className="font-medium">{item.value}%</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="card deliveries-card mt-6">
+        {/* Right Column */}
+        <div className="dashboard-col-right flex flex-col gap-6">
+          <div className="dashboard-card performance-card">
             <div className="flex justify-between items-center mb-4">
-              <div>
-                <h2 className="font-semibold text-base">Upcoming Deliveries</h2>
-                <p className="text-xs text-muted">Next scheduled drop-offs</p>
-              </div>
-              <button className="btn btn-secondary text-xs">View all →</button>
+              <h2 className="card-title">Performance Overview</h2>
+              <span className="text-xs font-semibold text-muted">This Year</span>
             </div>
-            <div className="deliveries-list">
-              {deliveriesMock.map((delivery, i) => (
-                <div key={i} className="delivery-item mb-4 flex items-start gap-3">
-                  <div className="delivery-icon-box">
-                    <delivery.icon size={16} className="text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium">{delivery.title}</h4>
-                    <p className="text-xs text-muted mt-1">{delivery.date}</p>
-                  </div>
+            
+            <div className="gauge-chart-container relative" style={{ height: '220px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={performanceData}
+                    cx="50%"
+                    cy="85%"
+                    startAngle={180}
+                    endAngle={0}
+                    innerRadius={80}
+                    outerRadius={110}
+                    paddingAngle={3}
+                    dataKey="value"
+                    stroke="none"
+                    cornerRadius={8}
+                  >
+                    {performanceData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="gauge-center-text absolute inset-0 flex flex-col items-center justify-end pb-4 pointer-events-none">
+                 <div className="text-4xl font-bold bg-surface p-1 rounded text-main">{perfComplete}%</div>
+                 <div className="text-sm font-semibold text-muted mt-1 bg-surface px-2 rounded">Project Complete</div>
+              </div>
+            </div>
+
+            <div className="performance-metrics flex gap-4 mt-6">
+              <div className="perf-metric-box flex-1">
+                <div className="flex items-center gap-2 text-xs font-semibold text-muted mb-3">
+                  <div className="metric-icon-sm text-success"><CheckCircle size={14}/></div> Complete
                 </div>
-              ))}
+                <div className="flex justify-between items-end">
+                  <span className="text-2xl font-bold">42,519</span>
+                  <span className="pnl-badge pnl-up text-[10px]"><TrendingUp size={12}/> +8.4%</span>
+                </div>
+              </div>
+              <div className="perf-metric-box flex-1">
+                <div className="flex items-center gap-2 text-xs font-semibold text-muted mb-3">
+                  <div className="metric-icon-sm"><RefreshCw size={14}/></div> Pending
+                </div>
+                <div className="flex justify-between items-end">
+                  <span className="text-2xl font-bold">42,519</span>
+                  <span className="pnl-badge pnl-warning text-[10px]"><TrendingUp size={12}/> +8.4%</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="card active-orders-card">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="font-semibold text-lg">Active Orders</h2>
-          <button className="btn btn-secondary text-xs">View all →</button>
-        </div>
-        <div className="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Client</th>
-                <th>Product</th>
-                <th>Due Date</th>
-                <th>Status</th>
-                <th>Revenue</th>
-              </tr>
-            </thead>
-            <tbody>
-              {activeOrdersMock.map(order => (
-                <tr key={order.id}>
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div className="avatar-small">{order.initial}</div>
-                      <div>
-                        <div className="font-medium text-sm">{order.client}</div>
-                        <div className="text-xs text-muted">{order.id}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-sm">{order.product}</td>
-                  <td className="text-sm">{order.dueDate}</td>
-                  <td>
-                    <span className={`badge ${order.status === 'Pending' ? 'pending' : 'progress'}`}>{order.status}</span>
-                  </td>
-                  <td className="text-sm font-medium">${order.revenue.toLocaleString()}.00</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="dashboard-card project-overview-card flex-1 flex flex-col">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h2 className="card-title text-sm font-semibold mb-1">Project Overview</h2>
+                <div className="text-4xl font-bold mt-2">24</div>
+              </div>
+              <div className="text-xs font-semibold text-muted flex items-center gap-1">
+                <span className="dot bg-success mr-1"></span> This Year
+              </div>
+            </div>
+
+            <div className="bar-chart-container flex-1 min-h-[180px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" />
+                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
+                  <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px', border: 'none', backgroundColor: 'var(--bg-surface)', boxShadow: 'var(--shadow-md)' }} />
+                  <Bar dataKey="value" radius={[6, 6, 6, 6]} barSize={36}>
+                    {
+                      chartData.map((entry, index) => {
+                        // Highlight logic for the Bar chart
+                        const isHighlighted = entry.month === ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][currentDate.getMonth()];
+                        return <Cell key={`cell-${index}`} fill={isHighlighted ? 'var(--success)' : 'var(--bg-surface-hover)'} />;
+                      })
+                    }
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </div>
       </div>
     </div>

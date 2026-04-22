@@ -5,6 +5,7 @@ import './Sidebar.css';
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/projects', label: 'Projects', icon: Briefcase },
   { path: '/production', label: 'Production', icon: ShoppingCart },
   { path: '/supplies', label: 'Supplies', icon: Package, subItems: [
     { path: '/supplies-manage', label: 'Manage' },
