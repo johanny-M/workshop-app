@@ -11,6 +11,7 @@ import Revenue from './pages/Revenue';
 import Saving from './pages/Saving';
 import Projects from './pages/Projects';
 import Production from './pages/Production';
+import Landing from './pages/Landing';
 
 import Login from './pages/Login';
 import { useStore } from './store/useStore';
@@ -21,6 +22,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/landing" element={<Landing />} />
         <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" replace />} />
         
         <Route path="/" element={isAuthenticated ? <Layout /> : <Navigate to="/login" replace />}>
