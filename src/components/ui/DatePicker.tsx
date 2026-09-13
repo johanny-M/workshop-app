@@ -5,9 +5,10 @@ interface DatePickerProps {
   value: string;
   onChange: (date: string) => void;
   placeholder?: string;
+  className?: string;
 }
 
-export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeholder = "Select date" }) => {
+export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeholder = "Select date", className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
   
   // Parse initial date or use today
@@ -75,8 +76,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeho
     <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
       {/* Input Field */}
       <div 
-        className="w-full flex items-center justify-between cursor-pointer"
-        style={{
+        className={`w-full flex items-center justify-between cursor-pointer ${className}`}
+        style={className ? {} : {
           background: 'var(--bg-main)',
           color: value && value !== 'TBD' ? 'var(--text-main)' : 'var(--text-muted)',
           border: '1px solid var(--border-color)',
@@ -86,8 +87,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeho
         }}
         onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }}
       >
-        <span className="text-sm font-medium">{formatDisplayDate(value)}</span>
-        <Calendar size={16} className="text-muted" />
+        <span className={className ? "" : "text-sm font-medium"} style={className ? { color: value ? 'var(--text-main)' : 'var(--text-muted)' } : {}}>
+          {formatDisplayDate(value)}
+        </span>
+        <Calendar size={className ? 24 : 16} className="text-muted" />
       </div>
 
       {/* Calendar Dropdown */}
@@ -95,10 +98,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeho
         <div 
           style={{
             position: 'absolute',
-            top: '100%',
+            bottom: '100%',
             left: 0,
-            marginTop: '0.5rem',
-            width: '280px',
+            marginBottom: '0.5rem',
+            width: className ? '400px' : '280px',
             backgroundColor: 'var(--bg-surface)',
             border: '1px solid var(--border-color)',
             borderRadius: 'var(--radius-xl)',
@@ -116,21 +119,23 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeho
               className={`p-1 rounded-md transition-colors ${isCurrentMonth ? 'opacity-30 cursor-not-allowed text-muted' : 'hover-bg-surface-hover text-muted'}`}
               disabled={isCurrentMonth}
             >
-              <ChevronLeft size={16}/>
+              <ChevronLeft size={className ? 24 : 16}/>
             </button>
-            <h3 className="font-bold text-sm text-main">{monthNames[month]} {year}</h3>
-            <button onClick={handleNextMonth} className="p-1 rounded-md hover-bg-surface-hover text-muted transition-colors"><ChevronRight size={16}/></button>
+            <h3 className="font-bold text-main" style={{ fontSize: className ? '1.25rem' : '0.875rem' }}>{monthNames[month]} {year}</h3>
+            <button onClick={handleNextMonth} className="p-1 rounded-md hover-bg-surface-hover text-muted transition-colors">
+              <ChevronRight size={className ? 24 : 16}/>
+            </button>
           </div>
           
           {/* Days of Week */}
-          <div className="grid gap-1 text-center text-xs font-semibold text-muted mb-2" style={{ gridTemplateColumns: 'repeat(7, 1fr)' }}>
+          <div className="grid gap-1 text-center font-semibold text-muted mb-2" style={{ gridTemplateColumns: 'repeat(7, 1fr)', fontSize: className ? '0.875rem' : '0.75rem' }}>
             <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
           </div>
           
           {/* Dates Grid */}
-          <div className="grid gap-1 text-sm" style={{ gridTemplateColumns: 'repeat(7, 1fr)' }}>
+          <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(7, 1fr)' }}>
             {Array.from({ length: startOffset }).map((_, i) => (
-              <div key={`empty-${i}`} className="w-8 h-8" />
+              <div key={`empty-${i}`} style={{ width: className ? '3rem' : '2rem', height: className ? '3rem' : '2rem' }} />
             ))}
             {Array.from({ length: daysInMonth }).map((_, i) => {
               const day = i + 1;
@@ -140,7 +145,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeho
               const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
               const isSelected = value === dateStr;
               
-              let classes = "flex items-center justify-center w-8 h-8 mx-auto rounded-full transition-colors text-xs font-semibold ";
+              let classes = `flex items-center justify-center mx-auto rounded-full transition-colors font-semibold `;
               if (isPastDate) {
                  classes += "opacity-30 cursor-not-allowed text-muted";
               } else if (isSelected) {
@@ -158,6 +163,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeho
                     if (!isPastDate) handleSelectDate(day); 
                   }}
                   className={classes}
+                  style={{
+                    width: className ? '3rem' : '2rem',
+                    height: className ? '3rem' : '2rem',
+                    fontSize: className ? '1.125rem' : '0.75rem'
+                  }}
                 >
                   {day}
                 </div>

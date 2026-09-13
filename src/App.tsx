@@ -2,12 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Dashboard from './pages/Dashboard';
-import Orders from './pages/Orders';
 import Inventory from './pages/Inventory';
 import Finances from './pages/Finances';
 import Settings from './pages/Settings';
 import Clients from './pages/Clients';
-import Personal from './pages/Personal';
 import Projects from './pages/Projects';
 import Landing from './pages/Landing';
 import PurchaseRequests from './pages/PurchaseRequests';
@@ -33,9 +31,6 @@ const App: React.FC = () => {
           <Route path="requests" element={<PurchaseRequests />} />
           <Route path="finance" element={<Finances />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="personal" element={<Personal />} />
-          <Route path="personal/revenue" element={<Navigate to="/personal" replace />} />
-          <Route path="personal/saving" element={<Navigate to="/personal" replace />} />
         </Route>
       </Routes>
     </Router>

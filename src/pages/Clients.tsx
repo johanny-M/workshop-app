@@ -5,6 +5,7 @@ import './Clients.css';
 
 const Clients: React.FC = () => {
   const { clients, addClient } = useStore();
+  const [view, setView] = useState<'kiosk' | 'directory'>('kiosk');
   const [filter, setFilter] = useState<'All' | 'Active' | 'Lead'>('All');
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,81 +38,42 @@ const Clients: React.FC = () => {
 
   const displayedClients = clients.filter(c => filter === 'All' ? true : c.status === filter);
 
-  return (
-    <div className="page-container fade-in">
-      <div className="page-header">
-        <div>
-          <h1 className="text-3xl font-bold mb-2 text-main">Client Network</h1>
-          <p className="text-muted" style={{ fontSize: '1.1rem' }}>Manage your relationships, leads, and client revenue</p>
-        </div>
+  const openAddClient = (status: 'Active' | 'Lead') => {
+    setNewClientData({ ...newClientData, status });
+    setIsModalOpen(true);
+  };
+
+  const renderKiosk = () => (
+    <div className="fade-in kiosk-dashboard">
+      <div className="kiosk-header">
+        <h1 className="kiosk-title">Clients</h1>
       </div>
 
-      <div className="global-kpi-grid">
-        <div className="dashboard-card kpi-card secondary-task-card relative overflow-hidden">
-          <div className="task-card-header mb-2 relative z-10">
-            <span className="task-card-title text-muted">Total Clients</span>
-          </div>
-          <div className="flex justify-end items-end relative h-24">
-            <div className="tucked-value-wrapper">
-              <div className="task-card-value tucked-value text-main" style={{ marginBottom: 0 }}>{activeClientsCount}</div>
-            </div>
-            <div className="flex items-center gap-3 z-10" style={{ position: 'absolute', right: '0', bottom: '0' }}>
-              <div className="flex items-center justify-center rounded-md" style={{ width: '36px', height: '36px', backgroundColor: 'var(--success-transparent)', color: 'var(--success)' }}>
-                <ArrowUp size={20} strokeWidth={3} />
-              </div>
-              <div style={{ fontSize: '2.25rem', fontWeight: 600, color: 'var(--success)', letterSpacing: '-0.02em', lineHeight: 1 }}>
-                +12%
-              </div>
-              <span className="flex items-center gap-1 text-sm font-medium text-muted" style={{ alignSelf: 'flex-end', paddingBottom: '0.25rem' }}>
-                this year
-              </span>
-            </div>
-          </div>
-        </div>
+      <div className="kiosk-grid fade-in">
+        <button className="kiosk-btn" onClick={() => openAddClient('Active')}>
+          <span className="kiosk-btn-label">Add New Client</span>
+        </button>
+        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setView('directory')}>
+          <span className="kiosk-btn-label">View Client Directory</span>
+        </button>
+        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => alert('View Analytics coming soon!')}>
+          <span className="kiosk-btn-label">View Analytics</span>
+        </button>
+      </div>
+    </div>
+  );
 
-        <div className="dashboard-card kpi-card secondary-task-card relative overflow-hidden">
-          <div className="task-card-header mb-2 relative z-10">
-            <span className="task-card-title text-muted">New Leads</span>
-          </div>
-          <div className="flex justify-end items-end relative h-24">
-            <div className="tucked-value-wrapper">
-              <div className="task-card-value tucked-value text-main" style={{ marginBottom: 0 }}>{leadClientsCount}</div>
-            </div>
-            <div className="flex items-center gap-3 z-10" style={{ position: 'absolute', right: '0', bottom: '0' }}>
-              <div className="flex items-center justify-center rounded-md" style={{ width: '36px', height: '36px', backgroundColor: 'var(--danger-transparent)', color: 'var(--danger)' }}>
-                <ArrowDown size={20} strokeWidth={3} />
-              </div>
-              <div style={{ fontSize: '2.25rem', fontWeight: 600, color: 'var(--danger)', letterSpacing: '-0.02em', lineHeight: 1 }}>
-                -2%
-              </div>
-              <span className="flex items-center gap-1 text-sm font-medium text-muted" style={{ alignSelf: 'flex-end', paddingBottom: '0.25rem' }}>
-                this month
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="dashboard-card kpi-card primary-task-card relative overflow-hidden" style={{ backgroundColor: 'var(--primary)', color: 'var(--bg-main)' }}>
-          <div className="task-card-header mb-2 relative z-10">
-            <span className="task-card-title" style={{ color: 'rgba(255,255,255,0.8)' }}>Total Client Revenue</span>
-          </div>
-          <div className="flex justify-end items-end relative h-24">
-            <div className="tucked-value-wrapper">
-              <div className="task-card-value tucked-value" style={{ marginBottom: 0 }}>${totalRevenue.toLocaleString()}</div>
-            </div>
-            <div className="flex items-center gap-3 text-white z-10" style={{ position: 'absolute', right: '0', bottom: '0' }}>
-              <div className="flex items-center justify-center rounded-md" style={{ width: '36px', height: '36px', backgroundColor: 'rgba(255,255,255,0.2)' }}>
-                <ArrowUp size={20} strokeWidth={3} />
-              </div>
-              <div style={{ fontSize: '2.25rem', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                +8%
-              </div>
-              <span className="flex items-center gap-1 text-sm font-medium opacity-70" style={{ alignSelf: 'flex-end', paddingBottom: '0.25rem' }}>
-                this month
-              </span>
-            </div>
-          </div>
-        </div>
+  const renderDirectory = () => (
+    <div className="fade-in" style={{ padding: '2rem' }}>
+      <div className="flex items-center gap-4 mb-6">
+        <button 
+          onClick={() => setView('kiosk')} 
+          style={{ padding: '0.5rem', borderRadius: '50%', border: '1px solid var(--border-color)', background: 'var(--bg-surface)' }}
+          className="hover-bg-surface-hover transition-colors"
+        >
+          <ArrowUpRight size={24} style={{ transform: 'rotate(225deg)' }} />
+        </button>
+        <h1 className="text-3xl font-bold text-main m-0">Client Directory</h1>
       </div>
 
       <div className="page-view-toggles mb-6">
@@ -147,36 +109,26 @@ const Clients: React.FC = () => {
               </div>
             </div>
 
-            <div className="client-contact">
-              <div className="contact-row">
-                <Mail size={14} className="contact-icon" /> {client.email}
-              </div>
-              <div className="contact-row">
-                <Phone size={14} className="contact-icon" /> {client.phone}
-              </div>
-            </div>
-
-            <div className="client-footer">
+            <div className="client-footer" style={{ borderTop: 'none', paddingTop: '0.5rem', marginTop: 0 }}>
               <div>
+                <div className="client-spent-label">Projects Ordered</div>
+                <div className="client-spent-val" style={{ color: 'var(--text-main)', fontSize: '1.2rem' }}>{client.totalOrders || 0}</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
                 <div className="client-spent-label">Lifetime Value</div>
                 <div className="client-spent-val">${client.totalSpent.toLocaleString()}</div>
               </div>
-              <button className="btn-icon" style={{ background: 'var(--bg-surface-hover)', borderRadius: '50%', padding: '0.5rem' }}>
-                <ArrowUpRight size={18} className="text-muted" />
-              </button>
             </div>
           </div>
         ))}
       </div>
+    </div>
+  );
 
-      {/* Floating Action Button */}
-      <button 
-        className="fab-btn" 
-        title="New Client"
-        onClick={() => setIsModalOpen(true)}
-      >
-        <Plus size={24} />
-      </button>
+  return (
+    <div style={{ height: '100%', overflowY: 'auto' }}>
+      {view === 'kiosk' && renderKiosk()}
+      {view === 'directory' && renderDirectory()}
 
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>

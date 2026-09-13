@@ -14,7 +14,7 @@ const Projects: React.FC = () => {
   // Filter out deleted projects
   const activeProjects = projects.filter(p => !p.deletedAt);
 
-  const [view, setView] = useState<'kanban' | 'calendar' | 'list'>('kanban');
+  const [view, setView] = useState<'kiosk' | 'kanban' | 'calendar' | 'list'>('kiosk');
   const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
   const [newColumnName, setNewColumnName] = useState('');
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -129,8 +129,41 @@ const Projects: React.FC = () => {
     return colors[index % colors.length];
   };
 
+  const renderKiosk = () => (
+    <div className="fade-in kiosk-dashboard">
+      <div className="kiosk-header">
+        <h1 className="kiosk-title">Project Pipeline</h1>
+      </div>
+
+      <div className="kiosk-grid fade-in">
+        <button className="kiosk-btn" onClick={() => { setTargetColumnId(projectColumns[0]?.id || ''); setIsTaskModalOpen(true); }}>
+          <span className="kiosk-btn-label">Add New Project</span>
+        </button>
+        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setView('kanban')}>
+          <span className="kiosk-btn-label">View Active Projects</span>
+        </button>
+        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => setView('calendar')}>
+          <span className="kiosk-btn-label">View Calendar</span>
+        </button>
+        <button className="kiosk-btn" style={{ animationDelay: '0.15s' }} onClick={() => setView('list')}>
+          <span className="kiosk-btn-label">View Project List</span>
+        </button>
+      </div>
+    </div>
+  );
+
   const renderKanbanView = () => (
     <div className="prod-kanban-board custom-scrollbar h-full">
+      <div className="flex items-center gap-4 mb-6 px-2">
+        <button 
+          onClick={() => setView('kiosk')} 
+          style={{ padding: '0.5rem', borderRadius: '50%', border: '1px solid var(--border-color)', background: 'var(--bg-surface)' }}
+          className="hover-bg-surface-hover transition-colors"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        <h1 className="text-2xl font-bold text-main m-0">Kanban Board</h1>
+      </div>
       <DragDropContext onDragEnd={onDragEnd}>
         {projectColumns.map((column, index) => {
           const columnProjects = activeProjects.filter(p => p.columnId === column.id);
@@ -361,6 +394,16 @@ const Projects: React.FC = () => {
 
   const renderListView = () => (
     <div style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden', padding: '1.75rem 2rem 4rem' }} className="custom-scrollbar">
+      <div className="flex items-center gap-4 mb-6">
+        <button 
+          onClick={() => setView('kiosk')} 
+          style={{ padding: '0.5rem', borderRadius: '50%', border: '1px solid var(--border-color)', background: 'var(--bg-surface)' }}
+          className="hover-bg-surface-hover transition-colors"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        <h1 className="text-2xl font-bold text-main m-0">Project List</h1>
+      </div>
       {activeColumns.map((col, colIdx) => {
         const columnProjects = activeProjects.filter(p => p.columnId === col.id);
         const dotColor = getColumnColor(colIdx);
@@ -598,16 +641,26 @@ const Projects: React.FC = () => {
 
   const renderCalendarView = () => {
     const weekDays = [
-      { date: '03', day: 'Mon' },
-      { date: '04', day: 'Tue' },
-      { date: '05', day: 'Wed', active: true },
-      { date: '06', day: 'Thu' },
-      { date: '07', day: 'Fri' },
-      { date: '08', day: 'Sat' },
+      { date: 15, day: 'Mon', active: false },
+      { date: 16, day: 'Tue', active: false },
+      { date: 17, day: 'Wed', active: true },
+      { date: 18, day: 'Thu', active: false },
+      { date: 19, day: 'Fri', active: false }
     ];
 
     return (
-      <div className="cal-module fade-in">
+      <div className="prod-calendar-view h-full flex flex-col fade-in">
+        <div className="flex items-center gap-4 mb-6 px-4 pt-4">
+          <button 
+            onClick={() => setView('kiosk')} 
+            style={{ padding: '0.5rem', borderRadius: '50%', border: '1px solid var(--border-color)', background: 'var(--bg-surface)' }}
+            className="hover-bg-surface-hover transition-colors"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <h1 className="text-2xl font-bold text-main m-0">Calendar</h1>
+        </div>
+        <div className="cal-module fade-in" style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
         {/* LEFT SIDEBAR */}
         <div className="cal-sidebar custom-scrollbar">
           {/* Mini Calendar */}
@@ -747,40 +800,21 @@ const Projects: React.FC = () => {
           </div>
         </div>
       </div>
+      </div>
     );
   };
 
   return (
-    <div className="page-container fade-in flex-col h-full overflow-hidden">
-      <div className="page-header">
-        <div>
-          <h1 className="text-3xl font-extrabold text-main flex items-center gap-2 mb-2">
-            Project Pipeline
-          </h1>
-          <p className="text-muted" style={{ fontSize: '1.1rem' }}>Here's a look at your team's ongoing workflows and upcoming deadlines.</p>
+    <div style={{ height: '100%', overflowY: 'auto' }}>
+      {view === 'kiosk' && renderKiosk()}
+      
+      {view !== 'kiosk' && (
+        <div className="projects-content flex-1 overflow-hidden relative h-full">
+          {view === 'kanban' && renderKanbanView()}
+          {view === 'list' && renderListView()}
+          {view === 'calendar' && renderCalendarView()}
         </div>
-
-        <div className="page-view-toggles">
-          <button
-            className={`page-view-toggle ${view === 'kanban' ? 'active' : ''}`}
-            onClick={() => setView('kanban')}
-          >
-            Kanban
-          </button>
-          <button
-            className={`page-view-toggle ${view === 'list' ? 'active' : ''}`}
-            onClick={() => setView('list')}
-          >
-            List
-          </button>
-        </div>
-      </div>
-
-      <div className="projects-content flex-1 overflow-hidden mt-6 relative">
-        {view === 'kanban' && renderKanbanView()}
-        {view === 'list' && renderListView()}
-        {view === 'calendar' && renderCalendarView()}
-      </div>
+      )}
 
       {isColumnModalOpen && (
         <div className="modal-overlay" onClick={() => setIsColumnModalOpen(false)}>

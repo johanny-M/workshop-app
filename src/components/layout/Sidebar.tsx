@@ -9,7 +9,6 @@ const navItems = [
   { path: '/supplies', label: 'Supplies', icon: Package },
   { path: '/clients', label: 'Clients', icon: Users },
   { path: '/finance', label: 'Finance', icon: DollarSign },
-  { path: '/personal', label: 'Personal', icon: Briefcase },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
