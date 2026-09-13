@@ -1,6 +1,5 @@
 import React from 'react';
-import { ShieldCheck, TrendingUp, Target, Plus } from 'lucide-react';
-import './PersonalFinance.css';
+import { ShieldCheck, TrendingUp, Target, Plus, ArrowUp } from 'lucide-react';
 
 const goals = [
   { id: 1, name: 'Emergency Fund', icon: ShieldCheck, target: 15000, current: 15000, color: 'teal' },
@@ -10,52 +9,52 @@ const goals = [
 
 const Saving: React.FC = () => {
   return (
-    <div className="pf-container fade-in">
-      <div className="pf-header flex justify-between items-end mb-8">
-        <div>
-          <h1 className="text-2xl font-bold mb-1">Savings & Investments</h1>
-          <p className="text-muted text-sm">Track your emergency funds and financial goals.</p>
-        </div>
-        <button className="btn btn-primary" style={{backgroundColor: 'var(--pf-teal)', color: '#fff', border: 'none'}}>
-          <Plus size={16} /> New Goal
-        </button>
-      </div>
-
-      <div className="pf-grid mb-8">
-        <div className="pf-card col-span-3 lg:col-span-1 flex flex-col justify-center">
-          <h3 className="text-muted text-sm mb-2 font-medium">Total Savings Portfolio</h3>
-          <div className="flex items-end gap-3 mb-6">
-            <span className="text-4xl font-bold pf-text-teal">$36,500</span>
-            <span className="pf-badge pf-badge-purple">15% Savings Rate</span>
+    <>
+      <div className="pf-content-grid reverse">
+        <div className="dashboard-card kpi-card primary-task-card flex flex-col relative overflow-hidden" style={{ backgroundColor: 'var(--primary)', color: 'var(--bg-main)' }}>
+          <div className="task-card-header mb-2 relative z-10">
+            <span className="task-card-title" style={{ color: 'rgba(255,255,255,0.8)' }}>Total Savings Portfolio</span>
+          </div>
+          <div className="flex justify-end items-end relative h-24 mb-6">
+            <div className="tucked-value-wrapper">
+              <div className="task-card-value tucked-value" style={{ marginBottom: 0 }}>$36,500</div>
+            </div>
+            <div className="flex items-center gap-3 text-white z-10" style={{ position: 'absolute', right: '0', bottom: '0' }}>
+              <div className="flex items-center justify-center rounded-md" style={{ width: '36px', height: '36px', backgroundColor: 'rgba(255,255,255,0.2)' }}>
+                <ArrowUp size={20} strokeWidth={3} />
+              </div>
+              <div style={{ fontSize: '2.25rem', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1 }}>
+                15%
+              </div>
+              <span className="flex items-center gap-1 text-sm font-medium opacity-70" style={{ alignSelf: 'flex-end', paddingBottom: '0.25rem' }}>
+                Savings Rate
+              </span>
+            </div>
           </div>
           
-          <div className="pt-4 border-t border-dashed" style={{ borderColor: 'var(--border-color)'}}>
-            <p className="text-sm font-medium mb-1">Monthly Goal Progress</p>
-            <p className="text-xs text-muted mb-3">You are on track to save $2,500 this month.</p>
-            <div className="pf-progress-bg">
-              <div className="pf-progress-fill" style={{ width: '85%', backgroundColor: 'var(--pf-teal)' }}></div>
+          <div className="pt-6 mt-auto" style={{ borderTop: '1px dashed rgba(255,255,255,0.2)'}}>
+            <p className="text-sm font-medium mb-1" style={{ color: 'white' }}>Monthly Goal Progress</p>
+            <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>You are on track to save $2,500 this month.</p>
+            <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.2)', borderRadius: '99px', overflow: 'hidden' }}>
+              <div style={{ width: '85%', height: '100%', background: 'white', borderRadius: '99px' }}></div>
             </div>
           </div>
         </div>
 
-        <div className="col-span-3 lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="pf-savings-goals">
           {goals.map(goal => {
             const percentage = Math.round((goal.current / goal.target) * 100);
             return (
-              <div key={goal.id} className="pf-card pf-goal-card">
+              <div key={goal.id} className="dashboard-card flex flex-col p-6">
                 <div className="flex justify-between items-start mb-6">
-                  <div className={`pf-icon-square pf-color-${goal.color}`}>
-                    <goal.icon size={24} />
-                  </div>
-                  <span className="text-sm font-bold opacity-50">{percentage}%</span>
+                  <span className="text-sm font-bold opacity-50 text-muted">{percentage}%</span>
                 </div>
-                <h3 className="font-semibold mb-1">{goal.name}</h3>
-                <p className="text-sm text-muted mb-4">${goal.current.toLocaleString()} / ${goal.target.toLocaleString()}</p>
+                <h3 className="font-semibold mb-1 text-main">{goal.name}</h3>
+                <p className="text-sm text-muted mb-8">${goal.current.toLocaleString()} / ${goal.target.toLocaleString()}</p>
                 
-                <div className="pf-progress-bg">
+                <div className="mt-auto" style={{ width: '100%', height: '8px', background: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
                   <div 
-                    className={`pf-progress-fill pf-fill-${goal.color}`} 
-                    style={{ width: `${percentage}%` }}
+                    style={{ width: `${percentage}%`, height: '100%', background: 'var(--primary)', borderRadius: '99px' }}
                   ></div>
                 </div>
               </div>
@@ -63,7 +62,7 @@ const Saving: React.FC = () => {
           })}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

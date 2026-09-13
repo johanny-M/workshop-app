@@ -1,26 +1,36 @@
 .sidebar {
-  width: 260px;
+  width: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
   background: var(--bg-surface);
-  border-right: 1px solid var(--border-color);
-  z-index: 10;
-  transition: width var(--transition-normal);
+  border-right: 0px solid var(--border-color-light);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), border 0.3s ease;
+  overflow-x: hidden;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 50;
+}
+
+.sidebar.expanded {
+  width: 260px;
+  border-right: 1px solid var(--border-color-light);
 }
 
 .sidebar-header {
-  height: 70px;
+  padding: 0 1.5rem;
   display: flex;
   align-items: center;
-  padding: 0 1.5rem;
-  gap: 0.75rem;
+  white-space: nowrap;
   border-bottom: 1px solid var(--border-color-light);
+  min-height: 70px;
 }
 
-.logo-icon {
-  color: var(--primary);
-  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 200px; /* Prevent text wrapping during slide transition */
 }
 
 .logo-text {
@@ -31,11 +41,77 @@
 
 .sidebar-nav {
   flex: 1;
-  padding: 1.5rem 1rem;
+  padding: 5rem 1rem 1.5rem 1rem;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   gap: 0.5rem;
   overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 260px; /* Prevent text wrapping during slide transition */
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Sidebar Footer & Upgrade Card */
+.sidebar-footer {
+  padding: 0 1rem 1.5rem 1rem;
+  min-width: 260px;
+}
+
+.upgrade-card {
+  background-color: rgba(16, 185, 129, 0.08); /* Matches active nav link subtle brand background */
+  border-radius: 1.25rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.upgrade-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Matches nav-link gap */
+  color: var(--primary-hover); /* Matches active nav link color */
+  margin-bottom: 0.5rem;
+}
+
+.upgrade-card-header .nav-icon {
+  margin: 0 0.25rem; /* Matches nav-icon margin */
+}
+
+.upgrade-card h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.upgrade-card p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0 0 0.75rem 0;
+  padding-left: 2.25rem; /* Aligns text with the h4 exactly (icon space + gap) */
+}
+
+.upgrade-btn {
+  background: var(--bg-surface);
+  color: var(--primary);
+  border: none;
+  border-radius: var(--radius-full); /* Matches nav-link pill shape */
+  padding: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.upgrade-btn:hover {
+  background: var(--primary);
+  color: white;
 }
 
 .nav-link {
@@ -47,6 +123,7 @@
   color: var(--sidebar-text);
   font-weight: 500;
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -56,19 +133,19 @@
 }
 
 .nav-link.active {
-  background-color: var(--sidebar-active-bg);
-  color: var(--sidebar-active-text);
-  border-right: none;
+  background-color: rgba(16, 185, 129, 0.15); /* Brand colored highlight */
+  color: var(--primary-hover);
 }
 
 .nav-icon {
-  margin-right: 0.25rem;
+  flex-shrink: 0;
+  margin: 0 0.25rem;
 }
 
 .sub-nav {
   display: flex;
   flex-direction: column;
-  margin-left: 2rem;
+  margin-left: 2.2rem;
   padding-left: 1rem;
   border-left: 1px solid var(--border-color);
   margin-top: 0.25rem;
@@ -83,6 +160,7 @@
   font-weight: 500;
   transition: all var(--transition-fast);
   position: relative;
+  white-space: nowrap;
 }
 
 .sub-nav-link::before {
@@ -104,52 +182,4 @@
   background-color: var(--bg-surface-hover);
   color: var(--sidebar-active-text);
   font-weight: 600;
-}
-
-.sidebar-footer {
-  padding: 1rem;
-  border-top: 1px solid var(--border-color-light);
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
-}
-
-.user-profile:hover {
-  background-color: var(--bg-surface-hover);
-}
-
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-full);
-  background-color: var(--primary);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.user-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.user-name {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.user-role {
-  font-size: 0.75rem;
-  color: var(--text-muted);
 }

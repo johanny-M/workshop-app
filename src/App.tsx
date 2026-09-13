@@ -7,11 +7,10 @@ import Inventory from './pages/Inventory';
 import Finances from './pages/Finances';
 import Settings from './pages/Settings';
 import Clients from './pages/Clients';
-import Revenue from './pages/Revenue';
-import Saving from './pages/Saving';
+import Personal from './pages/Personal';
 import Projects from './pages/Projects';
-import Production from './pages/Production';
 import Landing from './pages/Landing';
+import PurchaseRequests from './pages/PurchaseRequests';
 
 import Login from './pages/Login';
 import { useStore } from './store/useStore';
@@ -29,14 +28,14 @@ const App: React.FC = () => {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
-          <Route path="production" element={<Production />} />
           <Route path="supplies/*" element={<Inventory />} />
-          <Route path="crafters" element={<div className="fade-in p-6"><h1 className="text-2xl font-bold">Crafters Network</h1></div>} />
           <Route path="clients" element={<Clients />} />
+          <Route path="requests" element={<PurchaseRequests />} />
           <Route path="finance" element={<Finances />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="personal/revenue" element={<Revenue />} />
-          <Route path="personal/saving" element={<Saving />} />
+          <Route path="personal" element={<Personal />} />
+          <Route path="personal/revenue" element={<Navigate to="/personal" replace />} />
+          <Route path="personal/saving" element={<Navigate to="/personal" replace />} />
         </Route>
       </Routes>
     </Router>

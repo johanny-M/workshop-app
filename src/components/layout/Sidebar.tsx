@@ -1,62 +1,53 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Package, Users, DollarSign, Settings, Box, Wrench, Briefcase } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Package, Users, DollarSign, Settings, Hexagon, Wrench, Briefcase, Zap } from 'lucide-react';
 import './Sidebar.css';
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/projects', label: 'Projects', icon: Briefcase, subItems: [
-    { path: '/projects', label: 'Overview' },
-    { path: '/production', label: 'Production' }
-  ]},
-  { path: '/supplies', label: 'Supplies', icon: Package, subItems: [
-    { path: '/supplies-manage', label: 'Manage' },
-    { path: '/supplies', label: 'Request' }
-  ]},
-  { path: '/crafters', label: 'Crafters', icon: Wrench },
+  { path: '/projects', label: 'Projects', icon: Briefcase },
+  { path: '/supplies', label: 'Supplies', icon: Package },
   { path: '/clients', label: 'Clients', icon: Users },
   { path: '/finance', label: 'Finance', icon: DollarSign },
-  { path: '/personal', label: 'Personal', icon: Briefcase, subItems: [
-    { path: '/personal/revenue', label: 'Revenue' },
-    { path: '/personal/saving', label: 'Saving' }
-  ]},
+  { path: '/personal', label: 'Personal', icon: Briefcase },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const location = useLocation();
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <Box className="logo-icon" size={24} />
-        <span className="logo-text">Woodcrafters</span>
-      </div>
-      
+    <aside className={`sidebar ${isOpen ? 'expanded' : 'collapsed'}`}>
       <nav className="sidebar-nav">
         {navItems.map((item) => {
           const isActiveGroup = location.pathname.startsWith(item.path);
+          
           return (
-            <div key={item.path} className="nav-group">
-              <NavLink
-                to={item.path}
-                className={({ isActive }) => `nav-link ${isActive || isActiveGroup ? 'active' : ''}`}
-                end={item.subItems ? false : true}
+            <div key={item.path} className="nav-item-group">
+              <NavLink 
+                to={item.path} 
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                onClick={onClose}
               >
                 <item.icon size={20} className="nav-icon" />
                 <span>{item.label}</span>
               </NavLink>
-
+              
               {item.subItems && isActiveGroup && (
                 <div className="sub-nav">
-                  {item.subItems.map((sub) => (
-                    <NavLink
-                      key={sub.label}
-                      to={sub.path}
+                  {item.subItems.map(subItem => (
+                    <NavLink 
+                      key={subItem.path} 
+                      to={subItem.path}
                       className={({ isActive }) => `sub-nav-link ${isActive ? 'active' : ''}`}
-                      end
+                      onClick={onClose}
                     >
-                      {sub.label}
+                      {subItem.label}
                     </NavLink>
                   ))}
                 </div>
@@ -65,14 +56,15 @@ const Sidebar: React.FC = () => {
           );
         })}
       </nav>
-      
+
       <div className="sidebar-footer">
-        <div className="user-profile">
-          <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Mei Moris" className="avatar" />
-          <div className="user-info">
-            <span className="user-name">Mei Moris</span>
-            <span className="user-role">Manager</span>
+        <div className="upgrade-card">
+          <div className="upgrade-card-header">
+            <Zap size={20} className="nav-icon" />
+            <h4>Pro Plan</h4>
           </div>
+          <p>Unlock advanced inventory forecasting & premium features.</p>
+          <button className="upgrade-btn">Upgrade Now</button>
         </div>
       </div>
     </aside>

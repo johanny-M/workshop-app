@@ -29,7 +29,7 @@ const Orders: React.FC = () => {
       return;
     }
 
-    updateOrderStatus(draggableId, destination.droppableId as OrderStatus);
+    useStore.getState().moveOrder(draggableId, source.droppableId, destination.droppableId, source.index, destination.index);
   };
 
   return (

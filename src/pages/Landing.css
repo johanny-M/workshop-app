@@ -7,8 +7,8 @@ html {
 
 .landing-page {
   min-height: 100vh;
-  background-color: #0e0e0e;
-  color: #f5f0eb;
+  background-color: var(--bg-main);
+  color: var(--text-main);
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
 }
@@ -32,7 +32,6 @@ html {
 }
 
 .nav-logo {
-  font-family: 'Cormorant Garamond', serif;
   font-size: 1.8rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -151,7 +150,6 @@ html {
 }
 
 .hero-title {
-  font-family: 'Cormorant Garamond', serif;
   font-size: clamp(3rem, 7vw, 7rem);
   font-weight: 600;
   line-height: 1.05;
@@ -256,7 +254,6 @@ html {
 .stat-item { text-align: center; }
 
 .stat-number {
-  font-family: 'Cormorant Garamond', serif;
   font-size: 3rem;
   font-weight: 600;
   color: #10b981;
@@ -295,7 +292,6 @@ html {
 }
 
 .section-title {
-  font-family: 'Cormorant Garamond', serif;
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 600;
   line-height: 1.1;
@@ -392,7 +388,6 @@ html {
 }
 
 .accordion-title {
-  font-family: 'Cormorant Garamond', serif;
   font-size: 2.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -516,7 +511,6 @@ html {
 }
 
 .feature-title {
-  font-family: 'Cormorant Garamond', serif;
   font-size: 1.6rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -540,7 +534,6 @@ html {
 }
 
 .cta-title {
-  font-family: 'Cormorant Garamond', serif;
   font-size: clamp(2.5rem, 5vw, 5rem);
   font-weight: 600;
   line-height: 1.07;

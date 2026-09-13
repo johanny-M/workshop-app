@@ -1,15 +1,37 @@
-.dashboard-container {
-  padding: 1.5rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  height: 100%;
-}
-
 .dashboard-grid {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
+
+.top-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 1.5rem;
+}
+
+.kpi-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.kpi-stack > .dashboard-card {
+  flex: 1;
+}
+
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+
 
 .dashboard-card {
   background: var(--bg-surface);
@@ -17,13 +39,24 @@
   border-radius: var(--radius-2xl);
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+  position: relative;
+  overflow: hidden;
 }
 
-.tasks-cards-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-card {
+    transition: box-shadow 150ms ease-out;
+  }
+  .dashboard-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-lg);
+  }
 }
 
 .primary-task-card {
@@ -97,23 +130,48 @@
   color: var(--text-main);
 }
 
-.task-card-trend {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.8125rem;
-  font-weight: 500;
+/* --- Tucked Paper Cutout Effect --- */
+.tucked-value-wrapper {
+  position: absolute;
+  bottom: -0.75rem; /* Raise it slightly so it doesn't get completely buried */
+  left: 0; 
+  display: inline-flex;
+  padding-bottom: 0.75rem; /* Increase padding so text sits higher relative to the flap */
 }
 
-.primary-task-card .task-card-trend {
-  color: rgba(255, 255, 255, 0.9);
+.tucked-value {
+  font-size: 4rem; 
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  position: relative;
+  z-index: 1;
 }
 
-.secondary-task-card .trend-down {
-  color: var(--danger);
+/* The flap that covers the bottom */
+.tucked-value-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  right: -10%;
+  height: 1rem; /* Covers bottom of the number */
+  z-index: 2;
+  box-shadow: 0 -8px 12px -2px rgba(0, 0, 0, 0.12);
+  border-radius: 4px 4px 0 0;
 }
-.secondary-task-card .trend-down span {
-  color: var(--text-main);
+
+/* Match flap color to card background */
+.secondary-task-card .tucked-value-wrapper::after {
+  background-color: var(--bg-surface);
+}
+
+.primary-task-card .tucked-value-wrapper::after {
+  background-color: var(--primary);
+  box-shadow: 0 -10px 15px -4px rgba(0, 0, 0, 0.2); 
+}
+.primary-task-card .tucked-value {
+  color: white; 
 }
 
 .card-title {
@@ -148,8 +206,8 @@
 
 .seg-primary { background-color: var(--primary); }
 .seg-success { background-color: var(--success); }
-.seg-danger { background-color: var(--danger); }
-.seg-warning { background-color: var(--warning); }
+.seg-pending { background-color: var(--status-pending); }
+.seg-completed { background-color: var(--status-completed); }
 .seg-spacer { width: 12px; background: transparent; }
 
 .overview-table th {
@@ -161,7 +219,13 @@
   border-bottom: none;
   font-size: 0.9375rem;
   color: var(--text-main);
-  border-top: 1px dashed var(--border-color-light); /* Added for sleekness */
+  border-top: 1px dashed var(--border-color-light);
+}
+.table-row-hover:hover td {
+  background-color: var(--bg-surface-hover);
+}
+.table-row-hover td {
+  transition: background-color var(--transition-fast);
 }
 
 .perf-metric-box {
@@ -183,23 +247,6 @@
   color: var(--text-main);
 }
 
-.pnl-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-full);
-  font-weight: 600;
-  gap: 0.125rem;
-}
-.pnl-up {
-  background: var(--success-transparent);
-  color: var(--success);
-}
-.pnl-warning {
-  background: var(--warning-transparent);
-  color: var(--warning);
-}
-
 .dot {
   width: 8px;
   height: 8px;
@@ -208,12 +255,12 @@
 }
 .bg-primary { background-color: var(--primary); }
 .bg-success { background-color: var(--success); }
-.bg-danger { background-color: var(--danger); }
-.bg-warning { background-color: var(--warning); }
+.bg-pending { background-color: var(--status-pending); }
+.bg-completed { background-color: var(--status-completed); }
 
 .text-success { color: var(--success); }
-.text-danger { color: var(--danger); }
-.text-warning { color: var(--warning); }
+.text-pending { color: var(--status-pending); }
+.text-completed { color: var(--status-completed); }
 
 /* Remove previous chart styles if any exist targeting Recharts internally */
 .recharts-cartesian-grid-horizontal line {

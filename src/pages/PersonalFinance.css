@@ -1,130 +1,54 @@
-/* Personal Finance Shared Styles */
-:root {
-  --pf-green: #10b981;
-  --pf-blue: #3b82f6;
-  --pf-teal: #14b8a6;
-  --pf-purple: #8b5cf6;
-}
-
-.pf-container {
-  padding: 0;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.pf-header {
+/* KPI Grid (Top Row) */
+.pf-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
-.pf-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+.pf-kpi-card {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-@media (max-width: 1024px) {
-  .pf-grid {
+.pf-kpi-title {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pf-kpi-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+/* Content Grid (Bottom Rows) */
+.pf-content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.pf-content-grid.reverse {
+  grid-template-columns: 1fr 2fr;
+}
+
+@media (max-width: 900px) {
+  .pf-content-grid, .pf-content-grid.reverse {
     grid-template-columns: 1fr;
   }
 }
 
-.pf-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-xl);
-  padding: 2rem;
-  box-shadow: 0 4px 20px -2px rgba(0,0,0,0.03); /* Softer shadow */
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+/* Savings Grid specifically */
+.pf-savings-goals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
-
-.pf-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); /* Softer hover shadow */
-}
-
-.pf-text-blue { color: var(--pf-blue); }
-.pf-text-teal { color: var(--pf-teal); }
-
-.pf-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.pf-badge-green {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: var(--pf-green);
-}
-
-.pf-badge-purple {
-  background-color: rgba(139, 92, 246, 0.1);
-  color: var(--pf-purple);
-}
-
-.pf-icon-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.source-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem;
-  border-radius: var(--radius-lg);
-  transition: background-color var(--transition-fast);
-}
-
-.source-item:hover {
-  background-color: var(--bg-surface-hover);
-}
-
-.pf-icon-square {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pf-color-teal {
-  background-color: rgba(20, 184, 166, 0.1);
-  color: var(--pf-teal);
-}
-
-.pf-color-purple {
-  background-color: rgba(139, 92, 246, 0.1);
-  color: var(--pf-purple);
-}
-
-.pf-color-blue {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: var(--pf-blue);
-}
-
-.pf-progress-bg {
-  width: 100%;
-  height: 8px;
-  background-color: var(--bg-surface-hover);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-}
-
-.pf-progress-fill {
-  height: 100%;
-  border-radius: var(--radius-full);
-  transition: width 1s ease-out;
-}
-
-.pf-fill-teal { background-color: var(--pf-teal); }
-.pf-fill-purple { background-color: var(--pf-purple); }
-.pf-fill-blue { background-color: var(--pf-blue); }

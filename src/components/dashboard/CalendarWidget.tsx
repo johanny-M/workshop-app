@@ -44,9 +44,7 @@ const CalendarWidget: React.FC<CalendarWidgetProps> = ({ currentDate, onMonthCha
     const addE = window.confirm(`Add an event on ${clickedDate.toDateString()}?`);
     if (addE) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayParam).padStart(2, '0')}`;
-      const colors = ['#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#8b5cf6'];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-      setEvents(prev => [...prev, { date: dateStr, color: randomColor }]);
+      setEvents(prev => [...prev, { date: dateStr, color: 'var(--success)' }]);
     }
   };
 
@@ -105,9 +103,11 @@ const CalendarWidget: React.FC<CalendarWidgetProps> = ({ currentDate, onMonthCha
             >
               <div className="day-number">{String(slot.day).padStart(2, '0')}</div>
               <div className="day-events">
-                {dayEvents.map((ev, i) => (
-                  <span key={i} className="event-dot" style={{ backgroundColor: ev.color }}></span>
-                ))}
+                {dayEvents.length > 0 && (
+                  <span className="event-count-badge bg-success text-white px-1.5 py-0.5 rounded-full text-[9px] font-bold">
+                    {dayEvents.length}
+                  </span>
+                )}
               </div>
             </div>
           );
