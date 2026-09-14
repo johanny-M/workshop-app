@@ -62,7 +62,7 @@
 
   /* Kiosk Neumorphism Variables (Light) */
   --kiosk-bg: #f0f2f5;
-  --kiosk-btn-bg: #ffffff;
+  --kiosk-btn-bg: #e5e7eb; /* Soft gray instead of pure white */
   --kiosk-shadow-dark: rgba(0, 0, 0, 0.06);
   --kiosk-shadow-light: #ffffff;
   --kiosk-shadow-hover-dark: rgba(0, 0, 0, 0.08);

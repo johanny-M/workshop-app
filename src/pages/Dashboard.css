@@ -28,10 +28,9 @@
 .kiosk-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 3rem;
+  gap: 4rem; /* Keeps space for the large lip */
   flex: 1;
   align-content: start;
-  justify-items: center; /* Center the circular buttons in their columns */
 }
 
 @media (max-width: 1024px) {
@@ -49,74 +48,59 @@
 .kiosk-btn {
   background: var(--kiosk-btn-bg);
   border: none;
-  border-radius: 50%;
-  width: 280px;
-  height: 280px;
+  border-radius: 48px; /* Rounded rectangle */
+  width: 100%; /* Stretches to fill grid column */
+  min-height: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.25s ease-out;
-  box-shadow:  12px 12px 24px var(--kiosk-shadow-dark), 
-              -12px -12px 24px var(--kiosk-shadow-light);
+  /* Inner button shadow (Raised) */
+  box-shadow:  10px 10px 20px var(--kiosk-shadow-dark), 
+              -10px -10px 20px var(--kiosk-shadow-light);
   position: relative;
-  gap: 12px;
+  gap: 20px;
 }
 
-/* Brand colored curved accent behind the button */
+/* Base plate (outer lip with ditch) */
 .kiosk-btn::before {
   content: '';
   position: absolute;
-  bottom: -15px;
-  right: -15px;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: var(--primary);
+  inset: -24px; /* Massive lip */
+  border-radius: 80px; /* Slightly larger border radius for outer lip */
+  background: var(--kiosk-bg); /* Slightly darker than the button in light mode */
   z-index: -1;
-  transition: all 0.3s ease;
-  opacity: 0.15;
-}
-
-.kiosk-btn:hover {
-  box-shadow:  16px 16px 32px var(--kiosk-shadow-hover-dark), 
-              -16px -16px 32px var(--kiosk-shadow-hover-light);
-}
-
-.kiosk-btn:hover::before {
-  opacity: 0.2;
+  /* Outer base drop shadow AND Inner recessed ditch shadow */
+  box-shadow:  
+      20px 20px 40px var(--kiosk-shadow-dark), 
+     -20px -20px 40px var(--kiosk-shadow-light),
+     inset 8px 8px 16px var(--kiosk-shadow-dark),
+     inset -8px -8px 16px var(--kiosk-shadow-light);
+  transition: all 0.25s ease-out;
 }
 
 .kiosk-btn:active {
-  transform: translateY(2px);
-  box-shadow: inset 6px 6px 12px var(--kiosk-shadow-active-dark), 
-              inset -6px -6px 12px var(--kiosk-shadow-active-light);
-}
-
-.kiosk-btn:active::before {
-  bottom: -15px;
-  right: -15px;
+  /* Depress only the inner button into the ditch */
+  box-shadow: inset 8px 8px 16px var(--kiosk-shadow-active-dark), 
+              inset -8px -8px 16px var(--kiosk-shadow-active-light);
 }
 
 .kiosk-btn svg {
-  width: 48px;
-  height: 48px;
-  stroke-width: 1.5;
-  color: var(--text-muted);
+  width: 90px;
+  height: 90px;
+  stroke-width: 2;
+  color: var(--primary); 
   transition: all 0.3s ease;
 }
 
-.kiosk-btn:hover svg {
-  color: var(--primary);
-}
-
 .kiosk-btn-label {
-  font-weight: 700;
-  font-size: 1.6rem; 
+  font-weight: 500; /* Lighter font weight to match image */
+  font-size: 1.8rem; 
   color: var(--primary);
   transition: all 0.3s ease;
   text-align: center;
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
 }

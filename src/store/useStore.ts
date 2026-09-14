@@ -105,6 +105,15 @@ export interface Goal {
   category: 'equipment' | 'expansion' | 'emergency';
 }
 
+export interface AppNotification {
+  id: string;
+  title: string;
+  message: string;
+  date: string;
+  read: boolean;
+  type: 'info' | 'success' | 'warning' | 'error';
+}
+
 interface AppState {
   currency: Currency;
   setCurrency: (c: Currency) => void;
@@ -148,6 +157,11 @@ interface AppState {
   addSubtask: (projectId: string, title: string) => void;
   toggleSubtask: (projectId: string, subtaskId: string) => void;
   deleteSubtask: (projectId: string, subtaskId: string) => void;
+  // Notifications
+  notifications: AppNotification[];
+  addNotification: (notification: Omit<AppNotification, 'id' | 'date' | 'read'>) => void;
+  markAsRead: (id: string) => void;
+  markAllAsRead: () => void;
 }
 
 // Mock Data
@@ -214,10 +228,30 @@ export const useStore = create<AppState>((set) => ({
   updateOrderStatus: (id, status) => set((state) => ({
     orders: state.orders.map(o => o.id === id ? { ...o, status } : o)
   })),
-  addOrder: (order) => set((state) => ({ orders: [...state.orders, order] })),
+  addOrder: (order) => set((state) => {
+    const newNotification: AppNotification = {
+      id: `NOTIF-${Date.now()}`,
+      title: 'New Order Created',
+      message: `Order ${order.id} for ${order.itemName} added.`,
+      date: new Date().toISOString(),
+      read: false,
+      type: 'success'
+    };
+    return { orders: [...state.orders, order], notifications: [newNotification, ...state.notifications] };
+  }),
 
   clients: initialClients,
-  addClient: (client) => set((state) => ({ clients: [...state.clients, client] })),
+  addClient: (client) => set((state) => {
+    const newNotification: AppNotification = {
+      id: `NOTIF-${Date.now()}`,
+      title: 'New Client Added',
+      message: `${client.name} has been added to the directory.`,
+      date: new Date().toISOString(),
+      read: false,
+      type: 'info'
+    };
+    return { clients: [...state.clients, client], notifications: [newNotification, ...state.notifications] };
+  }),
 
   vendors: initialVendors,
   addVendor: (vendor) => set((state) => ({ vendors: [...state.vendors, vendor] })),
@@ -254,7 +288,17 @@ export const useStore = create<AppState>((set) => ({
   projectColumns: initialProjectColumns,
   projects: initialProjects,
   addProjectColumn: (column) => set((state) => ({ projectColumns: [...state.projectColumns, column] })),
-  addProject: (project) => set((state) => ({ projects: [...state.projects, project] })),
+  addProject: (project) => set((state) => {
+    const newNotification: AppNotification = {
+      id: `NOTIF-${Date.now()}`,
+      title: 'New Project Started',
+      message: `Project "${project.title}" has been created.`,
+      date: new Date().toISOString(),
+      read: false,
+      type: 'success'
+    };
+    return { projects: [...state.projects, project], notifications: [newNotification, ...state.notifications] };
+  }),
   updateProject: (updatedProject) => set((state) => ({
     projects: state.projects.map(p => p.id === updatedProject.id ? updatedProject : p)
   })),
@@ -341,12 +385,29 @@ export const useStore = create<AppState>((set) => ({
     )
   })),
 
-    deleteSubtask: (projectId, subtaskId) => set((state) => ({
-      projects: state.projects.map(p =>
-        p.id === projectId ? {
-          ...p,
-          subtasks: p.subtasks?.filter(st => st.id !== subtaskId)
-        } : p
-      )
-    }))
+  deleteSubtask: (projectId, subtaskId) => set((state) => ({
+    projects: state.projects.map(p => {
+      if (p.id === projectId) {
+        return { ...p, subtasks: p.subtasks?.filter(st => st.id !== subtaskId) };
+      }
+      return p;
+    })
+  })),
+  
+  notifications: [
+    { id: 'n1', title: 'Welcome to Workshop App', message: 'Your shop is ready to go!', date: new Date().toISOString(), read: false, type: 'info' },
+    { id: 'n2', title: 'Low Inventory', message: 'Oak Wood is running low.', date: new Date().toISOString(), read: false, type: 'warning' },
+  ],
+  addNotification: (notification) => set((state) => ({
+    notifications: [
+      { ...notification, id: `NOTIF-${Date.now()}`, date: new Date().toISOString(), read: false },
+      ...state.notifications
+    ]
+  })),
+  markAsRead: (id) => set((state) => ({
+    notifications: state.notifications.map(n => n.id === id ? { ...n, read: true } : n)
+  })),
+  markAllAsRead: () => set((state) => ({
+    notifications: state.notifications.map(n => ({ ...n, read: true }))
+  }))
 }));
