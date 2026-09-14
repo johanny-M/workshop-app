@@ -34,7 +34,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
       >
         <div className="modal-header">
           <h2 className="modal-title">{title}</h2>
-          <button className="modal-close-btn" onClick={onClose}>
+          <button className="btn-icon" onClick={onClose}>
             <X size={24} />
           </button>
         </div>

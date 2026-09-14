@@ -107,15 +107,22 @@ const Orders: React.FC = () => {
       
       {/* Modal placeholder */}
       {isModalOpen && (
-        <div className="modal-overlay">
-          <Card className="modal-content">
-            <h2 className="text-xl font-bold mb-4">Create New Order</h2>
-            <p className="text-muted mb-4">Order creation form goes here.</p>
-            <div className="flex justify-end gap-2">
-              <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-              <Button onClick={() => setIsModalOpen(false)}>Save Order</Button>
+        <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="modal-content scale-in" style={{ maxWidth: '400px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Create New Purchase</h2>
+              <button className="btn-icon" onClick={() => setIsModalOpen(false)}>
+                <X size={24} />
+              </button>
             </div>
-          </Card>
+            <div className="modal-body">
+              <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Order creation form goes here.</p>
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                <button type="button" className="btn-submit" onClick={() => setIsModalOpen(false)}>Save Order</button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -29,9 +29,9 @@ const Dashboard: React.FC = () => {
           <UserPlus />
           <span className="kiosk-btn-label">Add Lead</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setActiveModal('order')} title="Add Order">
+        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setActiveModal('order')} title="New Purchase">
           <ShoppingCart />
-          <span className="kiosk-btn-label">Add Order</span>
+          <span className="kiosk-btn-label">New Purchase</span>
         </button>
         <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => navigate('/projects')} title="Projects">
           <FolderKanban />

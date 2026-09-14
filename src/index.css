@@ -637,13 +637,158 @@ tr:hover td {
 }
 
 .modal-content {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-lg);
-  animation: scaleIn 0.2s ease-out;
+  background-color: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+[data-theme='dark'] .modal-content {
+  background-color: #1a1a1c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(150, 150, 150, 0.2);
+  position: relative;
+}
+
+.modal-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.modal-header .btn-icon {
+  position: absolute;
+  right: 1rem;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.modal-header .btn-icon:hover {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-main);
+}
+
+/* Form Style (Standalone Pills) */
+.modal-form {
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea,
+.kiosk-date-input {
+  width: 100%;
+  background: #f7f7f9;
+  border: none;
+  border-radius: 16px;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-main);
+  padding: 1rem 1.25rem;
+}
+
+[data-theme='dark'] .form-group input,
+[data-theme='dark'] .form-group select,
+[data-theme='dark'] .form-group textarea,
+[data-theme='dark'] .kiosk-date-input {
+  background: #242426;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus,
+.kiosk-date-input:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Specific fix for textarea */
+.form-group.textarea-group {
+  align-items: flex-start;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.btn-submit {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 24px; /* Pill shape */
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-submit:hover {
+  opacity: 0.9;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-cancel:hover {
+  background: var(--bg-surface-hover);
 }
 
 @keyframes scaleIn {

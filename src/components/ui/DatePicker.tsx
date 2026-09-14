@@ -75,23 +75,31 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeho
   return (
     <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
       {/* Input Field */}
-      <div 
-        className={`w-full flex items-center justify-between cursor-pointer ${className}`}
-        style={className ? {} : {
+      <button 
+        type="button" 
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
+        className={className}
+        style={className ? { display: 'flex', alignItems: 'center', justifyItems: 'space-between' } : {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          cursor: 'pointer',
           background: 'var(--bg-main)',
           color: value && value !== 'TBD' ? 'var(--text-main)' : 'var(--text-muted)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-md)',
           padding: '0.5rem 0.75rem',
-          transition: 'border-color var(--transition-fast)'
+          width: '100%'
         }}
-        onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }}
       >
-        <span className={className ? "" : "text-sm font-medium"} style={className ? { color: value ? 'var(--text-main)' : 'var(--text-muted)' } : {}}>
+        <span style={{ color: value ? 'inherit' : 'var(--text-muted)' }}>
           {formatDisplayDate(value)}
         </span>
-        <Calendar size={className ? 24 : 16} className="text-muted" />
-      </div>
+        <Calendar size={18} style={{ color: 'var(--text-muted)' }} />
+      </button>
 
       {/* Calendar Dropdown */}
       {isOpen && (

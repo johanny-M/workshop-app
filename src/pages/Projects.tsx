@@ -822,113 +822,131 @@ const Projects: React.FC = () => {
 
       {isColumnModalOpen && (
         <div className="modal-overlay" onClick={() => setIsColumnModalOpen(false)}>
-          <Card className="modal-content max-w-md p-6" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-bold mb-4">Add New Column</h2>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">Column Name</label>
-              <input
-                type="text"
-                value={newColumnName}
-                onChange={(e) => setNewColumnName(e.target.value)}
-                className="w-full p-2 border rounded-md bg-surface text-main border-color"
-                placeholder="e.g. In Review"
-                autoFocus
-              />
+          <div className="modal-content scale-in" style={{ maxWidth: '400px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Add New Column</h2>
+              <button className="btn-icon" onClick={() => setIsColumnModalOpen(false)}>
+                <X size={24} />
+              </button>
             </div>
-            <div className="flex justify-end gap-2 mt-6">
-              <Button variant="secondary" onClick={() => setIsColumnModalOpen(false)}>Cancel</Button>
-              <Button onClick={handleAddColumn} disabled={!newColumnName.trim()}>Add Column</Button>
+            <div className="modal-body">
+              <form className="modal-form" onSubmit={(e) => { e.preventDefault(); handleAddColumn(); }}>
+                <div className="form-group">
+                  <label>Column Name</label>
+                  <input
+                    type="text"
+                    value={newColumnName}
+                    onChange={(e) => setNewColumnName(e.target.value)}
+                    placeholder="e.g. In Review"
+                    autoFocus
+                  />
+                </div>
+                <div className="modal-actions">
+                  <button type="button" className="btn-cancel" onClick={() => setIsColumnModalOpen(false)}>Cancel</button>
+                  <button type="submit" className="btn-submit" disabled={!newColumnName.trim()}>Add Column</button>
+                </div>
+              </form>
             </div>
-          </Card>
+          </div>
         </div>
       )}
 
       {isTaskModalOpen && (
         <div className="modal-overlay" onClick={() => setIsTaskModalOpen(false)}>
-          <Card className="modal-content max-w-2xl p-6" style={{ maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-main)' }}>Create New Task</h2>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div style={{ gridColumn: 'span 2' }}>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Task Title <span style={{ color: 'var(--danger)' }}>*</span></label>
-                <input
-                  type="text"
-                  value={newTaskData.title}
-                  onChange={(e) => setNewTaskData({ ...newTaskData, title: e.target.value })}
-                  className="w-full"
-                  placeholder="e.g. Design Landing Page"
-                  autoFocus
-                />
-              </div>
-              <div style={{ gridColumn: 'span 2' }}>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Description</label>
-                <textarea
-                  value={newTaskData.description}
-                  onChange={(e) => setNewTaskData({ ...newTaskData, description: e.target.value })}
-                  className="w-full custom-scrollbar"
-                  placeholder="Brief description of the task..."
-                  rows={3}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Priority</label>
-                <select
-                  value={newTaskData.priority}
-                  onChange={(e) => setNewTaskData({ ...newTaskData, priority: e.target.value as any })}
-                  className="w-full"
-                >
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Due Date</label>
-                <DatePicker
-                  value={newTaskData.dueDate}
-                  onChange={(dateStr) => setNewTaskData({ ...newTaskData, dueDate: dateStr })}
-                />
-              </div>
-
-              <div style={{ position: 'relative', margin: '1.5rem 0', gridColumn: 'span 2', borderTop: '1px solid var(--border-color)' }}>
-                <span className="text-xs font-bold uppercase" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '0 0.75rem', backgroundColor: 'var(--bg-surface)', color: 'var(--text-muted)' }}>Project Details</span>
-              </div>
-
-              <div style={{ gridColumn: 'span 2' }}>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Client Name</label>
-                <input
-                  type="text"
-                  value={newTaskData.clientName}
-                  onChange={(e) => setNewTaskData({ ...newTaskData, clientName: e.target.value })}
-                  className="w-full"
-                  placeholder="e.g. Acme Corp"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Price ($)</label>
-                <input
-                  type="number"
-                  value={newTaskData.price}
-                  onChange={(e) => setNewTaskData({ ...newTaskData, price: e.target.value })}
-                  className="w-full"
-                  placeholder="0.00"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Material Spec</label>
-                <input
-                  type="text"
-                  value={newTaskData.materialSpec}
-                  onChange={(e) => setNewTaskData({ ...newTaskData, materialSpec: e.target.value })}
-                  className="w-full"
-                  placeholder="e.g. Aluminum 6061"
-                />
-              </div>
+          <div className="modal-content scale-in" style={{ maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Create New Task</h2>
+              <button className="btn-icon" onClick={() => { setIsTaskModalOpen(false); setEditingProjectId(null); setActiveMenuId(null); }}>
+                <X size={24} />
+              </button>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem' }}>
-              <Button variant="secondary" onClick={() => { setIsTaskModalOpen(false); setEditingProjectId(null); setActiveMenuId(null); }}>Cancel</Button>
-              <Button onClick={handleSaveTask} disabled={!newTaskData.title.trim()}>{editingProjectId ? 'Save Changes' : 'Create Task'}</Button>
+            <div className="modal-body">
+              <form className="modal-form" onSubmit={(e) => { e.preventDefault(); handleSaveTask(); }}>
+                <div className="form-group">
+                  <label>Task Title <span style={{ color: 'var(--danger)' }}>*</span></label>
+                  <input
+                    type="text"
+                    value={newTaskData.title}
+                    onChange={(e) => setNewTaskData({ ...newTaskData, title: e.target.value })}
+                    placeholder="e.g. Design Landing Page"
+                    autoFocus
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Description</label>
+                  <textarea
+                    value={newTaskData.description}
+                    onChange={(e) => setNewTaskData({ ...newTaskData, description: e.target.value })}
+                    className="custom-scrollbar"
+                    placeholder="Brief description of the task..."
+                    rows={3}
+                  />
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div className="form-group">
+                    <label>Priority</label>
+                    <select
+                      value={newTaskData.priority}
+                      onChange={(e) => setNewTaskData({ ...newTaskData, priority: e.target.value as any })}
+                    >
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Due Date</label>
+                    <DatePicker
+                      className="kiosk-date-input"
+                      value={newTaskData.dueDate}
+                      onChange={(dateStr) => setNewTaskData({ ...newTaskData, dueDate: dateStr })}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ position: 'relative', margin: '2rem 0', borderTop: '1px solid var(--border-color)' }}>
+                  <span className="text-xs font-bold uppercase" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '0 0.75rem', backgroundColor: '#ffffff', color: 'var(--text-muted)' }}>Project Details</span>
+                </div>
+
+                <div className="form-group">
+                  <label>Client Name</label>
+                  <input
+                    type="text"
+                    value={newTaskData.clientName}
+                    onChange={(e) => setNewTaskData({ ...newTaskData, clientName: e.target.value })}
+                    placeholder="e.g. Acme Corp"
+                  />
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div className="form-group">
+                    <label>Price ($)</label>
+                    <input
+                      type="number"
+                      value={newTaskData.price}
+                      onChange={(e) => setNewTaskData({ ...newTaskData, price: e.target.value })}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Material Spec</label>
+                    <input
+                      type="text"
+                      value={newTaskData.materialSpec}
+                      onChange={(e) => setNewTaskData({ ...newTaskData, materialSpec: e.target.value })}
+                      placeholder="e.g. Aluminum 6061"
+                    />
+                  </div>
+                </div>
+                
+                <div className="modal-actions">
+                  <button type="button" className="btn-cancel" onClick={() => { setIsTaskModalOpen(false); setEditingProjectId(null); setActiveMenuId(null); }}>Cancel</button>
+                  <button type="submit" className="btn-submit" disabled={!newTaskData.title.trim()}>{editingProjectId ? 'Save Changes' : 'Create Task'}</button>
+                </div>
+              </form>
             </div>
-          </Card>
+          </div>
         </div>
       )}
     </div>

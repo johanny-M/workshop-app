@@ -357,84 +357,63 @@ const Inventory: React.FC = () => {
       {/* New Vendor Modal */}
       {isVendorModalOpen && (
         <div className="modal-overlay" onClick={() => setIsVendorModalOpen(false)}>
-          <div className="dashboard-card modal-content max-w-2xl p-6" style={{ maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold" style={{ color: 'var(--text-main)' }}>Add New Vendor</h2>
-              <button onClick={() => setIsVendorModalOpen(false)} className="btn-icon">
-                <X size={20} />
+          <div className="modal-content scale-in" style={{ maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Add New Vendor</h2>
+              <button className="btn-icon" onClick={() => setIsVendorModalOpen(false)}>
+                <X size={24} />
               </button>
             </div>
             
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div style={{ gridColumn: 'span 2' }}>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Vendor Name <span style={{ color: 'var(--danger)' }}>*</span></label>
-                <input
-                  type="text"
-                  value={newVendorData.name}
-                  onChange={(e) => setNewVendorData({ ...newVendorData, name: e.target.value })}
-                  className="w-full form-input"
-                  placeholder="e.g. Lumber Yards Inc"
-                  autoFocus
-                  style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface-hover)' }}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Email</label>
-                <input
-                  type="email"
-                  value={newVendorData.email}
-                  onChange={(e) => setNewVendorData({ ...newVendorData, email: e.target.value })}
-                  className="w-full form-input"
-                  placeholder="orders@lumberyards.com"
-                  style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface-hover)' }}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Phone</label>
-                <input
-                  type="text"
-                  value={newVendorData.phone}
-                  onChange={(e) => setNewVendorData({ ...newVendorData, phone: e.target.value })}
-                  className="w-full form-input"
-                  placeholder="(555) 000-0000"
-                  style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface-hover)' }}
-                />
-              </div>
-              <div style={{ gridColumn: 'span 2' }}>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Categories Supplied (comma separated)</label>
-                <input
-                  type="text"
-                  value={newVendorData.categories}
-                  onChange={(e) => setNewVendorData({ ...newVendorData, categories: e.target.value })}
-                  className="w-full form-input"
-                  placeholder="Wood, Hardware"
-                  style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface-hover)' }}
-                />
-              </div>
-            </div>
-            
-            <div className="flex justify-end gap-3 mt-8">
-              <button 
-                onClick={() => setIsVendorModalOpen(false)}
-                style={{ padding: '0.5rem 1rem', borderRadius: 'var(--radius-md)', fontWeight: 600, color: 'var(--text-muted)' }}
-                className="hover-text-main"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={handleSaveVendor}
-                disabled={!newVendorData.name.trim()}
-                style={{ 
-                  padding: '0.5rem 1.5rem', 
-                  borderRadius: 'var(--radius-md)', 
-                  fontWeight: 600, 
-                  backgroundColor: newVendorData.name.trim() ? 'var(--text-main)' : 'var(--bg-surface-hover)', 
-                  color: newVendorData.name.trim() ? 'var(--bg-main)' : 'var(--text-muted)',
-                  cursor: newVendorData.name.trim() ? 'pointer' : 'not-allowed'
-                }}
-              >
-                Add Vendor
-              </button>
+            <div className="modal-body">
+              <form className="modal-form" onSubmit={(e) => { e.preventDefault(); handleSaveVendor(); }}>
+                <div className="form-group">
+                  <label>Vendor Name <span style={{ color: 'var(--danger)' }}>*</span></label>
+                  <input
+                    type="text"
+                    value={newVendorData.name}
+                    onChange={(e) => setNewVendorData({ ...newVendorData, name: e.target.value })}
+                    placeholder="e.g. Lumber Yards Inc"
+                    autoFocus
+                  />
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div className="form-group">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      value={newVendorData.email}
+                      onChange={(e) => setNewVendorData({ ...newVendorData, email: e.target.value })}
+                      placeholder="orders@lumberyards.com"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Phone</label>
+                    <input
+                      type="text"
+                      value={newVendorData.phone}
+                      onChange={(e) => setNewVendorData({ ...newVendorData, phone: e.target.value })}
+                      placeholder="(555) 000-0000"
+                    />
+                  </div>
+                </div>
+                
+                <div className="form-group">
+                  <label>Categories Supplied (comma separated)</label>
+                  <input
+                    type="text"
+                    value={newVendorData.categories}
+                    onChange={(e) => setNewVendorData({ ...newVendorData, categories: e.target.value })}
+                    placeholder="Wood, Hardware"
+                  />
+                </div>
+                
+                <div className="modal-actions">
+                  <button type="button" className="btn-cancel" onClick={() => setIsVendorModalOpen(false)}>Cancel</button>
+                  <button type="submit" className="btn-submit" disabled={!newVendorData.name.trim()}>Add Vendor</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
