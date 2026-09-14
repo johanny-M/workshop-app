@@ -62,7 +62,8 @@
 
   /* Kiosk Neumorphism Variables (Light) */
   --kiosk-bg: #f0f2f5;
-  --kiosk-btn-bg: #e5e7eb; /* Soft gray instead of pure white */
+  --kiosk-btn-bg: #e5e7eb;
+  /* Soft gray instead of pure white */
   --kiosk-shadow-dark: rgba(0, 0, 0, 0.06);
   --kiosk-shadow-light: #ffffff;
   --kiosk-shadow-hover-dark: rgba(0, 0, 0, 0.08);
@@ -238,6 +239,7 @@ select:focus {
 .bg-surface {
   background-color: var(--bg-surface);
 }
+
 .bg-surface-hover {
   background-color: var(--bg-surface-hover);
 }
@@ -435,17 +437,14 @@ select:focus {
 }
 
 /* Card Components */
-.card {
+.card,
+.dashboard-card {
   background-color: var(--bg-surface);
-  border-radius: var(--radius-xl);
+  border-radius: 0;
   border: 1px solid var(--border-color);
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition-normal), box-shadow var(--transition-normal), background-color var(--transition-normal);
-}
-
-.card:hover {
-  box-shadow: var(--shadow-md);
 }
 
 /* Animations */
@@ -644,7 +643,7 @@ tr:hover td {
   width: 100%;
   max-width: 500px;
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 [data-theme='dark'] .modal-content {
@@ -711,8 +710,8 @@ tr:hover td {
   margin-bottom: 0.25rem;
 }
 
-.form-group input, 
-.form-group select, 
+.form-group input,
+.form-group select,
 .form-group textarea,
 .kiosk-date-input {
   width: 100%;
@@ -733,8 +732,8 @@ tr:hover td {
   background: #242426;
 }
 
-.form-group input:focus, 
-.form-group select:focus, 
+.form-group input:focus,
+.form-group select:focus,
 .form-group textarea:focus,
 .kiosk-date-input:focus {
   outline: none;
@@ -749,16 +748,17 @@ tr:hover td {
 
 .modal-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 1rem;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .btn-submit {
   background: var(--primary);
   color: white;
   border: none;
-  border-radius: 24px; /* Pill shape */
+  border-radius: 24px;
+  /* Pill shape */
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
@@ -766,7 +766,9 @@ tr:hover td {
   transition: opacity 0.2s;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .btn-submit:hover {
@@ -784,7 +786,9 @@ tr:hover td {
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .btn-cancel:hover {
@@ -848,13 +852,11 @@ tr:hover td {
   margin-bottom: 2.5rem;
 }
 
-/* Global Page View Toggles (Tabs) */
+/* Global Page View Toggles (Tabs & Filters) */
 .page-view-toggles {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
+  gap: 1rem;
   width: 100%;
   overflow-x: auto;
   -ms-overflow-style: none;
@@ -865,53 +867,102 @@ tr:hover td {
   display: none;
 }
 
-.page-view-toggle {
-  background: transparent;
-  border: none;
+.page-view-toggle,
+.view-toggle-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   color: var(--text-muted);
   font-weight: 500;
-  font-size: 1.15rem;
-  padding: 0.75rem 0.5rem;
-  border-bottom: 2px solid transparent;
-  border-radius: 0;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: all 0.2s ease;
+  white-space: nowrap;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  white-space: nowrap;
-  margin-bottom: -1px;
+  gap: 0.5rem;
 }
 
-.page-view-toggle:hover {
+.page-view-toggle:hover,
+.view-toggle-btn:hover {
+  background: var(--bg-surface-hover);
   color: var(--text-main);
-  border-bottom-color: var(--text-muted);
 }
 
-.page-view-toggle.active {
-  background: transparent;
-  color: var(--primary);
-  border-bottom: 2px solid var(--primary);
-  box-shadow: none;
+.page-view-toggle.active,
+.view-toggle-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
   font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 /* Global KPI standardization */
-.global-kpi-grid {
+.kpi-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 4rem;
+  margin-bottom: 3.5rem;
+  align-content: start;
 }
 
 @media (max-width: 1024px) {
-  .global-kpi-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
   }
 }
 
 .kpi-card {
-  height: 180px;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 280px;
+  background-color: var(--bg-surface);
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-title {
+  font-size: 5rem;
+  color: var(--primary);
+  font-weight: 900;
+  margin: 0;
+  letter-spacing: -0.05em;
+  position: absolute;
+  top: 1.5rem;
+  right: 1rem;
+  opacity: 0.06;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 0;
+}
+
+.kpi-subtitle {
+  font-size: 1.15rem;
+  opacity: 0.8;
+  font-weight: 700;
+  margin-top: 0.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+.kpi-value {
+  font-size: 6rem;
+  font-weight: 700;
+  color: inherit;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  margin-top: auto;
+  position: relative;
+  z-index: 1;
 }

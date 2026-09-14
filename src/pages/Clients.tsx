@@ -81,12 +81,11 @@ const Clients: React.FC = () => {
 
       <div className="page-view-toggles mb-6">
         <span className="text-base font-semibold text-muted mr-auto">Filter By Status:</span>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
           {['All', 'Active', 'Lead'].map((status) => (
             <button 
               key={status} 
               className={`view-toggle-btn ${filter === status ? 'active' : ''}`}
-              style={{ fontSize: '1.1rem' }}
               onClick={() => setFilter(status as any)}
             >
               {status}

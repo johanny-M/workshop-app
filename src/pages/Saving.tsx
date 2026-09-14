@@ -11,34 +11,12 @@ const Saving: React.FC = () => {
   return (
     <>
       <div className="pf-content-grid reverse">
-        <div className="dashboard-card kpi-card primary-task-card flex flex-col relative overflow-hidden" style={{ backgroundColor: 'var(--primary)', color: 'var(--bg-main)' }}>
-          <div className="task-card-header mb-2 relative z-10">
-            <span className="task-card-title" style={{ color: 'rgba(255,255,255,0.8)' }}>Total Savings Portfolio</span>
+        <div className="dashboard-card kpi-card fade-in" style={{ backgroundColor: 'var(--primary)', color: 'var(--bg-main)' }}>
+          <div>
+            <h3 className="kpi-title" style={{ color: 'rgba(255,255,255,0.8)' }}>Total Savings Portfolio</h3>
+            <p className="kpi-subtitle" style={{ color: 'rgba(255,255,255,0.7)' }}>15% Savings Rate • On track to save $2,500 this month</p>
           </div>
-          <div className="flex justify-end items-end relative h-24 mb-6">
-            <div className="tucked-value-wrapper">
-              <div className="task-card-value tucked-value" style={{ marginBottom: 0 }}>$36,500</div>
-            </div>
-            <div className="flex items-center gap-3 text-white z-10" style={{ position: 'absolute', right: '0', bottom: '0' }}>
-              <div className="flex items-center justify-center rounded-md" style={{ width: '36px', height: '36px', backgroundColor: 'rgba(255,255,255,0.2)' }}>
-                <ArrowUp size={20} strokeWidth={3} />
-              </div>
-              <div style={{ fontSize: '2.25rem', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                15%
-              </div>
-              <span className="flex items-center gap-1 text-sm font-medium opacity-70" style={{ alignSelf: 'flex-end', paddingBottom: '0.25rem' }}>
-                Savings Rate
-              </span>
-            </div>
-          </div>
-          
-          <div className="pt-6 mt-auto" style={{ borderTop: '1px dashed rgba(255,255,255,0.2)'}}>
-            <p className="text-sm font-medium mb-1" style={{ color: 'white' }}>Monthly Goal Progress</p>
-            <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>You are on track to save $2,500 this month.</p>
-            <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.2)', borderRadius: '99px', overflow: 'hidden' }}>
-              <div style={{ width: '85%', height: '100%', background: 'white', borderRadius: '99px' }}></div>
-            </div>
-          </div>
+          <div className="kpi-value">$36,500</div>
         </div>
 
         <div className="pf-savings-goals">

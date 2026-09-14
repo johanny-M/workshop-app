@@ -174,9 +174,9 @@ const initialClients: Client[] = [
 ];
 
 const initialVendors: Vendor[] = [
-  { id: 'V-001', name: 'Lumber Yards Inc', email: 'orders@lumberyards.com', phone: '(555) 111-2222', categories: ['Wood'], status: 'Active', rating: 4.8 },
-  { id: 'V-002', name: 'Steel & Hardware Co', email: 'sales@steelhard.com', phone: '(555) 333-4444', categories: ['Hardware', 'Metals'], status: 'Active', rating: 4.5 },
-  { id: 'V-003', name: 'Finish Line Supplies', email: 'info@finishline.com', phone: '(555) 555-6666', categories: ['Finish', 'Paint'], status: 'Active', rating: 4.2 },
+  { id: 'V-001', name: 'Lumber Yards Inc', email: 'orders@lumberyards.com', phone: '+1 (555) 111-2222', categories: ['Wood'], status: 'Active', rating: 4.8 },
+  { id: 'V-002', name: 'Steel & Hardware Co', email: 'sales@steelhard.com', phone: '+44 20 7123 4567', categories: ['Hardware', 'Metals'], status: 'Active', rating: 4.5 },
+  { id: 'V-003', name: 'Finish Line Supplies', email: 'info@finishline.com', phone: '+1 (555) 555-6666', categories: ['Finish', 'Paint'], status: 'Active', rating: 4.2 },
 ];
 
 const initialOrders: Order[] = [

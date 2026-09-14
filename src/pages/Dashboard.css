@@ -47,8 +47,9 @@
 
 .kiosk-btn {
   background: var(--kiosk-btn-bg);
-  border: none;
-  border-radius: 48px; /* Rounded rectangle */
+  padding: 2.5rem;
+  border-radius: 0; /* Edged rectangle */
+  border: 1px solid var(--border-color);
   width: 100%; /* Stretches to fill grid column */
   min-height: 280px;
   display: flex;
