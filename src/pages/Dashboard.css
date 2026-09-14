@@ -4,15 +4,15 @@
   display: flex;
   flex-direction: column;
   padding: 3rem 2%;
-  min-height: calc(100vh - 80px); /* Adjust based on your header height */
-  background-color: var(--bg-main);
+  min-height: calc(100vh - 80px);
+  background-color: var(--kiosk-bg); /* Use theme variable */
   font-family: 'JetBrains Mono', monospace;
 }
 
 .kiosk-header {
   margin-bottom: 3rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color-light); /* Better for dark mode */
 }
 
 .kiosk-title {
@@ -28,9 +28,10 @@
 .kiosk-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 3rem;
   flex: 1;
   align-content: start;
+  justify-items: center; /* Center the circular buttons in their columns */
 }
 
 @media (max-width: 1024px) {
@@ -45,37 +46,77 @@
   }
 }
 
-/* --- Kiosk Buttons --- */
 .kiosk-btn {
-  background: var(--primary); /* Dark green KPI color */
+  background: var(--kiosk-btn-bg);
   border: none;
-  border-radius: 0; /* No rounded corners as requested */
-  padding: 4rem 2rem; /* Massive padding for POS style */
+  border-radius: 50%;
+  width: 280px;
+  height: 280px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-height: 250px;
+  transition: all 0.25s ease-out;
+  box-shadow:  12px 12px 24px var(--kiosk-shadow-dark), 
+              -12px -12px 24px var(--kiosk-shadow-light);
+  position: relative;
+  gap: 12px;
+}
+
+/* Brand colored curved accent behind the button */
+.kiosk-btn::before {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  right: -15px;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: var(--primary);
+  z-index: -1;
+  transition: all 0.3s ease;
+  opacity: 0.15;
 }
 
 .kiosk-btn:hover {
-  transform: translateY(-4px);
-  filter: brightness(1.1);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  box-shadow:  16px 16px 32px var(--kiosk-shadow-hover-dark), 
+              -16px -16px 32px var(--kiosk-shadow-hover-light);
+}
+
+.kiosk-btn:hover::before {
+  opacity: 0.2;
 }
 
 .kiosk-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(2px);
+  box-shadow: inset 6px 6px 12px var(--kiosk-shadow-active-dark), 
+              inset -6px -6px 12px var(--kiosk-shadow-active-light);
+}
+
+.kiosk-btn:active::before {
+  bottom: -15px;
+  right: -15px;
+}
+
+.kiosk-btn svg {
+  width: 48px;
+  height: 48px;
+  stroke-width: 1.5;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.kiosk-btn:hover svg {
+  color: var(--primary);
 }
 
 .kiosk-btn-label {
-  font-weight: 600;
-  font-size: 2rem; /* Big typography */
-  color: white; /* Just text, white on green */
+  font-weight: 700;
+  font-size: 1.6rem; 
+  color: var(--primary);
   transition: all 0.3s ease;
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ChevronDown, Package, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, ChevronDown, Package, ArrowLeft, ChevronLeft, ChevronRight, TrendingDown, TrendingUp, List, PieChart } from 'lucide-react';
 import { AddExpenseForm, AddIncomeForm } from '../components/finance/FinanceForms';
 import '../pages/Dashboard.css';
 
@@ -22,16 +22,20 @@ const Finances: React.FC = () => {
       </div>
 
       <div className="kiosk-grid fade-in">
-        <button className="kiosk-btn" onClick={() => setActiveModal('expense')}>
+        <button className="kiosk-btn" onClick={() => setActiveModal('expense')} title="Add Expense">
+          <TrendingDown color="var(--danger)" />
           <span className="kiosk-btn-label">Add Expense</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setActiveModal('income')}>
+        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setActiveModal('income')} title="Add Income">
+          <TrendingUp color="var(--success)" />
           <span className="kiosk-btn-label">Add Income</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => setView('transactions')}>
-          <span className="kiosk-btn-label">View Transactions</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => setView('transactions')} title="Transactions">
+          <List />
+          <span className="kiosk-btn-label">Transactions</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.15s' }} onClick={() => alert('Reports page coming soon!')}>
+        <button className="kiosk-btn" style={{ animationDelay: '0.15s' }} onClick={() => alert('Reports page coming soon!')} title="Reports">
+          <PieChart />
           <span className="kiosk-btn-label">Reports</span>
         </button>
       </div>

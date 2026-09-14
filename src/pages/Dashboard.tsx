@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserPlus, ShoppingCart, FolderKanban, Users, DollarSign, Package } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { AddLeadForm, NewClientForm, NewProjectForm, NewOrderForm } from '../components/dashboard/KioskForms';
 import './Dashboard.css';
@@ -20,22 +21,28 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="kiosk-grid fade-in">
-        <button className="kiosk-btn" onClick={() => setActiveModal('lead')}>
+        <button className="kiosk-btn" onClick={() => setActiveModal('lead')} title="Add Lead">
+          <UserPlus />
           <span className="kiosk-btn-label">Add Lead</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setActiveModal('order')}>
-          <span className="kiosk-btn-label">New Order</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setActiveModal('order')} title="Add Order">
+          <ShoppingCart />
+          <span className="kiosk-btn-label">Add Order</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => navigate('/projects')}>
+        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => navigate('/projects')} title="Projects">
+          <FolderKanban />
           <span className="kiosk-btn-label">Projects</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.15s' }} onClick={() => navigate('/clients')}>
+        <button className="kiosk-btn" style={{ animationDelay: '0.15s' }} onClick={() => navigate('/clients')} title="Clients">
+          <Users />
           <span className="kiosk-btn-label">Clients</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.2s' }} onClick={() => navigate('/finance')}>
+        <button className="kiosk-btn" style={{ animationDelay: '0.2s' }} onClick={() => navigate('/finance')} title="Finances">
+          <DollarSign />
           <span className="kiosk-btn-label">Finances</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.25s' }} onClick={() => navigate('/supplies')}>
+        <button className="kiosk-btn" style={{ animationDelay: '0.25s' }} onClick={() => navigate('/supplies')} title="Inventory">
+          <Package />
           <span className="kiosk-btn-label">Inventory</span>
         </button>
       </div>

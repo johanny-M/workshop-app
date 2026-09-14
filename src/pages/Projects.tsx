@@ -4,7 +4,7 @@ import { useStore, ProjectColumn, Project, Subtask } from '../store/useStore';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { DatePicker } from '../components/ui/DatePicker';
-import { Plus, MoreHorizontal, Paperclip, MessageSquare, Calendar, LayoutGrid, List as ListIcon, Search, Filter, ChevronLeft, ChevronRight, Check, Bookmark, Pause, Pencil, Trash2, ChevronDown, ChevronUp, Play, Lock, X } from 'lucide-react';
+import { Plus, MoreHorizontal, Paperclip, MessageSquare, Calendar, LayoutGrid, List as ListIcon, Search, Filter, ChevronLeft, ChevronRight, Check, Bookmark, Pause, Pencil, Trash2, ChevronDown, ChevronUp, Play, Lock, X, FilePlus, KanbanSquare, CalendarDays, ListTodo } from 'lucide-react';
 import './Projects.css';
 import './Production.css';
 
@@ -136,17 +136,21 @@ const Projects: React.FC = () => {
       </div>
 
       <div className="kiosk-grid fade-in">
-        <button className="kiosk-btn" onClick={() => { setTargetColumnId(projectColumns[0]?.id || ''); setIsTaskModalOpen(true); }}>
-          <span className="kiosk-btn-label">Add New Project</span>
+        <button className="kiosk-btn" onClick={() => setView('calendar')} title="Calendar">
+          <CalendarDays />
+          <span className="kiosk-btn-label">Calendar</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setView('kanban')}>
-          <span className="kiosk-btn-label">View Active Projects</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => { setTargetColumnId(projectColumns[0]?.id || ''); setIsTaskModalOpen(true); }} title="Add Project">
+          <FilePlus />
+          <span className="kiosk-btn-label">Add Project</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => setView('calendar')}>
-          <span className="kiosk-btn-label">View Calendar</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => setView('kanban')} title="Active Projects">
+          <KanbanSquare />
+          <span className="kiosk-btn-label">Active Projects</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.15s' }} onClick={() => setView('list')}>
-          <span className="kiosk-btn-label">View Project List</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.15s' }} onClick={() => setView('list')} title="Project List">
+          <ListTodo />
+          <span className="kiosk-btn-label">Project List</span>
         </button>
       </div>
     </div>

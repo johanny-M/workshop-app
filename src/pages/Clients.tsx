@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStore, Client } from '../store/useStore';
-import { Users, UserPlus, Plus, Building, Mail, Phone, ArrowUpRight, CheckCircle2, TrendingUp, TrendingDown, X, ArrowUp, ArrowDown } from 'lucide-react';
+import { Users, UserPlus, Plus, Building, Mail, Phone, ArrowUpRight, CheckCircle2, TrendingUp, TrendingDown, X, ArrowUp, ArrowDown, Contact, LineChart } from 'lucide-react';
 import './Clients.css';
 
 const Clients: React.FC = () => {
@@ -50,14 +50,17 @@ const Clients: React.FC = () => {
       </div>
 
       <div className="kiosk-grid fade-in">
-        <button className="kiosk-btn" onClick={() => openAddClient('Active')}>
-          <span className="kiosk-btn-label">Add New Client</span>
+        <button className="kiosk-btn" onClick={() => openAddClient('Active')} title="Add Client">
+          <UserPlus />
+          <span className="kiosk-btn-label">Add Client</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setView('directory')}>
-          <span className="kiosk-btn-label">View Client Directory</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setView('directory')} title="Directory">
+          <Contact />
+          <span className="kiosk-btn-label">Directory</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => alert('View Analytics coming soon!')}>
-          <span className="kiosk-btn-label">View Analytics</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => alert('View Analytics coming soon!')} title="Analytics">
+          <LineChart />
+          <span className="kiosk-btn-label">Analytics</span>
         </button>
       </div>
     </div>

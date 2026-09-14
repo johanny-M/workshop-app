@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore, Vendor } from '../store/useStore';
-import { Package, AlertTriangle, DollarSign, LayoutGrid, FileText, ArrowRight, Trash2, Upload, Plus, ChevronDown, Users, X, UserPlus, Building, Mail, Phone, ArrowUpRight, CheckCircle2, ClipboardList, ArrowLeft } from 'lucide-react';
+import { Package, AlertTriangle, DollarSign, LayoutGrid, FileText, ArrowRight, Trash2, Upload, Plus, ChevronDown, Users, X, UserPlus, Building, Mail, Phone, ArrowUpRight, CheckCircle2, ClipboardList, ArrowLeft, PlusSquare } from 'lucide-react';
 import { AddItemForm } from '../components/inventory/InventoryForms';
 import './Inventory.css';
 
@@ -75,23 +75,29 @@ const Inventory: React.FC = () => {
       </div>
 
       <div className="kiosk-grid fade-in">
-        <button className="kiosk-btn" onClick={() => setIsRequestModalOpen(true)}>
-          <span className="kiosk-btn-label">Add New Item</span>
+        <button className="kiosk-btn" onClick={() => setIsRequestModalOpen(true)} title="Add Item">
+          <PlusSquare />
+          <span className="kiosk-btn-label">Add Item</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setIsVendorModalOpen(true)}>
+        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setIsVendorModalOpen(true)} title="Add Vendor">
+          <Building />
           <span className="kiosk-btn-label">Add Vendor</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => alert('Add Consumptions coming soon!')}>
+        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => alert('Add Consumptions coming soon!')} title="Add Consumptions">
+          <ClipboardList />
           <span className="kiosk-btn-label">Add Consumptions</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.15s' }} onClick={() => setView('vendors')}>
-          <span className="kiosk-btn-label">View Vendors</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.15s' }} onClick={() => setView('vendors')} title="Vendors">
+          <Users />
+          <span className="kiosk-btn-label">Vendors</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.2s' }} onClick={() => alert('View Fixed Asset coming soon!')}>
-          <span className="kiosk-btn-label">View Fixed Asset</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.2s' }} onClick={() => alert('View Fixed Asset coming soon!')} title="Fixed Assets">
+          <LayoutGrid />
+          <span className="kiosk-btn-label">Fixed Assets</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.25s' }} onClick={() => setView('inventory')}>
-          <span className="kiosk-btn-label">View Inventory Stock</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.25s' }} onClick={() => setView('inventory')} title="Stock">
+          <Package />
+          <span className="kiosk-btn-label">Stock</span>
         </button>
       </div>
     </div>
