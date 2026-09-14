@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { supabase } from '../lib/supabase';
 
 // Types
 export type OrderStatus = 'Pending' | 'In Progress' | 'Completed' | 'Delivered';
@@ -28,7 +29,7 @@ export interface Project {
   attachmentsCount: number;
   commentsCount: number;
   clientName?: string;
-  price?: number;
+  price?: number | string;
   materialSpec?: string;
   deletedAt?: string;
   subtasks?: Subtask[];
@@ -115,6 +116,9 @@ export interface AppNotification {
 }
 
 interface AppState {
+  isInitialized: boolean;
+  init: () => Promise<void>;
+  
   currency: Currency;
   setCurrency: (c: Currency) => void;
   // Orders
@@ -164,118 +168,25 @@ interface AppState {
   markAllAsRead: () => void;
 }
 
-// Mock Data
-const initialClients: Client[] = [
-  { id: 'C-001', name: 'Alice Smith', email: 'alice@smithbros.com', phone: '(555) 123-4567', company: 'Smith Bros', status: 'Active', totalSpent: 250, avatar: 'https://i.pravatar.cc/150?u=alice' },
-  { id: 'C-002', name: 'John Doe', email: 'john.doe@acmecorp.com', phone: '(555) 987-6543', company: 'Acme Corp', status: 'Active', totalSpent: 1250, avatar: 'https://i.pravatar.cc/150?u=john' },
-  { id: 'C-003', name: 'Sarah Jane', email: 'sarah.j@example.com', phone: '(555) 456-7890', status: 'Lead', totalSpent: 0, avatar: 'https://i.pravatar.cc/150?u=sarah' },
-  { id: 'C-004', name: 'Michael Tech', email: 'mike@globaltech.com', phone: '(555) 222-3333', company: 'Global Tech', status: 'Active', totalSpent: 3500, avatar: 'https://i.pravatar.cc/150?u=mike' },
-  { id: 'C-005', name: 'Emily White', email: 'emily.w@shopifypartners.com', phone: '(555) 888-9999', company: 'Shopify Partners', status: 'Active', totalSpent: 6700, avatar: 'https://i.pravatar.cc/150?u=emily' },
-];
-
-const initialVendors: Vendor[] = [
-  { id: 'V-001', name: 'Lumber Yards Inc', email: 'orders@lumberyards.com', phone: '+1 (555) 111-2222', categories: ['Wood'], status: 'Active', rating: 4.8 },
-  { id: 'V-002', name: 'Steel & Hardware Co', email: 'sales@steelhard.com', phone: '+44 20 7123 4567', categories: ['Hardware', 'Metals'], status: 'Active', rating: 4.5 },
-  { id: 'V-003', name: 'Finish Line Supplies', email: 'info@finishline.com', phone: '+1 (555) 555-6666', categories: ['Finish', 'Paint'], status: 'Active', rating: 4.2 },
-];
-
-const initialOrders: Order[] = [
-  { id: 'ORD-001', clientName: 'Acme Corp', itemName: 'Custom Desk', status: 'Pending', date: '2026-04-18', cost: { materials: 120, labor: 80, overhead: 20 }, price: 450 },
-  { id: 'ORD-002', clientName: 'Jane Doe', itemName: 'Dining Table', status: 'In Progress', date: '2026-04-17', cost: { materials: 200, labor: 150, overhead: 30 }, price: 800 },
-  { id: 'ORD-003', clientName: 'Smith Bros', itemName: 'Shelving Unit', status: 'Completed', date: '2026-04-15', cost: { materials: 80, labor: 40, overhead: 10 }, price: 250 },
-];
-
-const initialInventory: Material[] = [
-  { id: 'MAT-001', name: 'Oak Wood', quantity: 45, unit: 'm', lowStockThreshold: 10, costPerUnit: 15, category: 'Wood' },
-  { id: 'MAT-002', name: 'Steel Screws', quantity: 800, unit: 'pcs', lowStockThreshold: 200, costPerUnit: 0.1, category: 'Hardware' },
-  { id: 'MAT-003', name: 'Varnish', quantity: 5, unit: 'L', lowStockThreshold: 10, costPerUnit: 25, category: 'Finish' },
-  { id: 'MAT-004', name: 'Teak Boards', quantity: 8, unit: 'm', lowStockThreshold: 15, costPerUnit: 45, category: 'Wood' },
-];
-
-const initialPurchaseRequests: PurchaseRequest[] = [
-  { id: 'PR-001', vendorName: 'Lumber Yards Inc', date: '2026-09-12', status: 'Pending', totalCost: 1250, items: [{ name: 'Premium Oak Boards', quantity: 50, unit: 'm', estimatedCost: 25 }], notes: 'Need this expedited for the Stripe project.' },
-  { id: 'PR-002', vendorName: 'Finish Line Supplies', date: '2026-09-10', status: 'Ordered', totalCost: 450, items: [{ name: 'Matte Varnish', quantity: 10, unit: 'L', estimatedCost: 45 }], notes: 'Standard delivery.' },
-  { id: 'PR-003', vendorName: 'Steel & Hardware Co', date: '2026-09-05', status: 'Delivered', totalCost: 85, items: [{ name: 'Screws Pack', quantity: 10, unit: 'boxes', estimatedCost: 8.5 }] },
-];
-
-const initialGoals: Goal[] = [
-  { id: 'G-001', name: 'New CNC Machine', target: 5000, current: 1200, category: 'equipment' },
-  { id: 'G-002', name: 'Emergency Fund', target: 10000, current: 8500, category: 'emergency' },
-];
-
-const initialProjectColumns: ProjectColumn[] = [
-  { id: 'c-interested', title: 'Interested' },
-  { id: 'c-pending', title: 'Pending' },
-  { id: 'c-inprogress', title: 'In Progress' },
-  { id: 'c-completed', title: 'Completed' },
-  { id: 'c-delivered', title: 'Delivered' }
-];
-
-const initialProjects: Project[] = [
-  { id: 'p-1', title: 'Onboard Screens', description: 'Increase conversion on our landing', priority: 'High', dueDate: 'March 21, 2025', clientName: 'Stripe Inc.', price: '1200', materialSpec: 'Digital', columnId: 'c-pending', assignees: ['https://i.pravatar.cc/150?u=a042581f4e29026701d', 'https://i.pravatar.cc/150?u=a042581f4e29026702d', 'https://i.pravatar.cc/150?u=a042581f4e29026703d'], attachmentsCount: 3, commentsCount: 3 },
-  { id: 'p-2', title: 'Splash Screen', description: 'Increase conversion on our landing', priority: 'Low', dueDate: 'March 25, 2025', clientName: 'Acme Corp', price: '800', materialSpec: 'Digital', columnId: 'c-pending', assignees: ['https://i.pravatar.cc/150?u=a042581f4e29026704d', 'https://i.pravatar.cc/150?u=a042581f4e29026705d'], attachmentsCount: 3, commentsCount: 3 },
-  { id: 'p-3', title: 'Homepage', description: 'Increase conversion on our landing', priority: 'Medium', dueDate: 'April 02, 2025', clientName: 'Global Tech', price: '3500', materialSpec: 'Web Dev', columnId: 'c-pending', assignees: ['https://i.pravatar.cc/150?u=a042581f4e29026706d'], attachmentsCount: 3, commentsCount: 3 },
-  { id: 'p-4', title: 'Mini Cart', description: 'Increase conversion on our landing', priority: 'High', dueDate: 'March 15, 2025', clientName: 'Shopify Partners', price: '2200', materialSpec: 'E-commerce', columnId: 'c-inprogress', assignees: ['https://i.pravatar.cc/150?u=a042581f4e29026701d', 'https://i.pravatar.cc/150?u=a042581f4e29026707d'], attachmentsCount: 3, commentsCount: 3 },
-  { id: 'p-5', title: 'Checkout Screens', description: 'Increase conversion on our landing', priority: 'High', dueDate: 'March 10, 2025', clientName: 'Shopify Partners', price: '4500', materialSpec: 'E-commerce', columnId: 'c-inprogress', assignees: ['https://i.pravatar.cc/150?u=a042581f4e29026708d', 'https://i.pravatar.cc/150?u=a042581f4e29026709d'], attachmentsCount: 3, commentsCount: 3 },
-  { id: 'p-6', title: 'Pharmik ERP MVP', description: 'Increase conversion on our landing', priority: 'High', dueDate: 'Feb 28, 2025', clientName: 'Pharmik Health', price: '15000', materialSpec: 'Full Stack', columnId: 'c-completed', assignees: ['https://i.pravatar.cc/150?u=a042581f4e29026710d'], attachmentsCount: 3, commentsCount: 3 },
-];
-
-export const useStore = create<AppState>((set) => ({
+export const useStore = create<AppState>((set, get) => ({
+  isInitialized: false,
   currency: 'USD',
   setCurrency: (c) => set({ currency: c }),
 
-  orders: initialOrders,
-  updateOrderStatus: (id, status) => set((state) => ({
-    orders: state.orders.map(o => o.id === id ? { ...o, status } : o)
-  })),
-  addOrder: (order) => set((state) => {
-    const newNotification: AppNotification = {
-      id: `NOTIF-${Date.now()}`,
-      title: 'New Order Created',
-      message: `Order ${order.id} for ${order.itemName} added.`,
-      date: new Date().toISOString(),
-      read: false,
-      type: 'success'
-    };
-    return { orders: [...state.orders, order], notifications: [newNotification, ...state.notifications] };
-  }),
-
-  clients: initialClients,
-  addClient: (client) => set((state) => {
-    const newNotification: AppNotification = {
-      id: `NOTIF-${Date.now()}`,
-      title: 'New Client Added',
-      message: `${client.name} has been added to the directory.`,
-      date: new Date().toISOString(),
-      read: false,
-      type: 'info'
-    };
-    return { clients: [...state.clients, client], notifications: [newNotification, ...state.notifications] };
-  }),
-
-  vendors: initialVendors,
-  addVendor: (vendor) => set((state) => ({ vendors: [...state.vendors, vendor] })),
-
-  purchaseRequests: initialPurchaseRequests,
-  addPurchaseRequest: (request) => set((state) => ({ purchaseRequests: [request, ...state.purchaseRequests] })),
-  updatePurchaseRequestStatus: (id, status) => set((state) => ({
-    purchaseRequests: state.purchaseRequests.map(pr => pr.id === id ? { ...pr, status } : pr)
-  })),
-
-  inventory: initialInventory,
-  updateInventory: (id, change) => set((state) => ({
-    inventory: state.inventory.map(m => m.id === id ? { ...m, quantity: m.quantity + change } : m)
-  })),
+  orders: [],
+  clients: [],
+  vendors: [],
+  purchaseRequests: [],
+  inventory: [],
   categories: ['Wood', 'Hardware', 'Finish', 'Fabric'],
-  addCategory: (category) => set((state) => ({ categories: [...state.categories, category] })),
-
-  goals: initialGoals,
-  updateGoalProgress: (id, amount) => set((state) => ({
-    goals: state.goals.map(g => g.id === id ? { ...g, current: Math.min(g.target, g.current + amount) } : g)
-  })),
-
+  goals: [],
+  projectColumns: [],
+  projects: [],
+  notifications: [],
+  
   user: { name: 'Mei Moris', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
   isAuthenticated: localStorage.getItem('isAuthenticated') === 'true',
+
   login: () => {
     localStorage.setItem('isAuthenticated', 'true');
     set({ isAuthenticated: true, user: { name: 'Mei Moris', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' } });
@@ -285,10 +196,127 @@ export const useStore = create<AppState>((set) => ({
     set({ isAuthenticated: false, user: null });
   },
 
-  projectColumns: initialProjectColumns,
-  projects: initialProjects,
-  addProjectColumn: (column) => set((state) => ({ projectColumns: [...state.projectColumns, column] })),
-  addProject: (project) => set((state) => {
+  init: async () => {
+    if (get().isInitialized) return;
+
+    try {
+      // Fetch all core data in parallel
+      const [
+        { data: colsData },
+        { data: projData },
+        { data: subtasksData },
+        { data: ordersData },
+        { data: clientsData },
+        { data: vendorsData },
+        { data: invData },
+        { data: prData },
+        { data: goalsData },
+        { data: notifData }
+      ] = await Promise.all([
+        supabase.from('project_columns').select('*'),
+        supabase.from('projects').select('*').is('deleted_at', null),
+        supabase.from('subtasks').select('*'),
+        supabase.from('orders').select('*'),
+        supabase.from('clients').select('*'),
+        supabase.from('vendors').select('*'),
+        supabase.from('inventory').select('*'),
+        supabase.from('purchase_requests').select('*'),
+        supabase.from('goals').select('*'),
+        supabase.from('notifications').select('*').order('date', { ascending: false })
+      ]);
+
+      // Map Supabase project columns
+      const projectColumns = colsData || [];
+
+      // Map Supabase subtasks
+      const subtasksByProject = (subtasksData || []).reduce((acc: any, st: any) => {
+        if (!acc[st.project_id]) acc[st.project_id] = [];
+        acc[st.project_id].push({
+          id: st.id,
+          title: st.title,
+          completed: st.completed,
+          assigneeAvatar: st.assignee_avatar
+        });
+        return acc;
+      }, {});
+
+      // Map Supabase projects
+      const projects = (projData || []).map(p => ({
+        id: p.id,
+        title: p.title,
+        description: p.description,
+        priority: p.priority,
+        dueDate: p.due_date,
+        columnId: p.column_id,
+        assignees: p.assignees || [],
+        attachmentsCount: p.attachments_count,
+        commentsCount: p.comments_count,
+        clientName: p.client_name,
+        price: p.price,
+        materialSpec: p.material_spec,
+        deletedAt: p.deleted_at,
+        subtasks: subtasksByProject[p.id] || []
+      }));
+
+      // Map Supabase orders
+      const orders = (ordersData || []).map(o => ({
+        id: o.id,
+        clientName: o.client_name,
+        itemName: o.item_name,
+        status: o.status,
+        date: o.date,
+        cost: { materials: Number(o.cost_materials), labor: Number(o.cost_labor), overhead: Number(o.cost_overhead) },
+        price: Number(o.price)
+      }));
+
+      // Map Supabase inventory
+      const inventory = (invData || []).map(i => ({
+        id: i.id,
+        name: i.name,
+        quantity: Number(i.quantity),
+        unit: i.unit,
+        lowStockThreshold: Number(i.low_stock_threshold),
+        costPerUnit: Number(i.cost_per_unit),
+        category: i.category
+      }));
+
+      // Map Supabase PRs
+      const purchaseRequests = (prData || []).map(pr => ({
+        id: pr.id,
+        vendorName: pr.vendor_name,
+        date: pr.date,
+        status: pr.status,
+        totalCost: Number(pr.total_cost),
+        notes: pr.notes,
+        items: pr.items || []
+      }));
+
+      set({
+        isInitialized: true,
+        projectColumns,
+        projects,
+        orders,
+        clients: clientsData || [],
+        vendors: vendorsData || [],
+        inventory,
+        purchaseRequests,
+        goals: goalsData || [],
+        notifications: notifData || []
+      });
+    } catch (err) {
+      console.error('Failed to initialize app state from Supabase:', err);
+    }
+  },
+
+  addProjectColumn: async (column) => {
+    set(state => ({ projectColumns: [...state.projectColumns, column] }));
+    await supabase.from('project_columns').insert([column]);
+  },
+
+  addProject: async (project) => {
+    const { subtasks, ...projectData } = project;
+    
+    // Optimistic UI update
     const newNotification: AppNotification = {
       id: `NOTIF-${Date.now()}`,
       title: 'New Project Started',
@@ -297,117 +325,247 @@ export const useStore = create<AppState>((set) => ({
       read: false,
       type: 'success'
     };
-    return { projects: [...state.projects, project], notifications: [newNotification, ...state.notifications] };
-  }),
-  updateProject: (updatedProject) => set((state) => ({
-    projects: state.projects.map(p => p.id === updatedProject.id ? updatedProject : p)
-  })),
-  softDeleteProject: (projectId) => set((state) => ({
-    projects: state.projects.map(p => p.id === projectId ? { ...p, deletedAt: new Date().toISOString() } : p)
-  })),
-  updateProjectColumn: (projectId, columnId) =>
-    set((state) => ({
-      projects: state.projects.map((p) =>
-        p.id === projectId ? { ...p, columnId } : p
-      ),
-    })),
-  moveProject: (projectId, sourceCol, destCol, sourceIdx, destIdx) => set((state) => {
-    // Get all projects in destination column except the one moving
-    const destProjects = state.projects.filter(p => p.columnId === destCol && p.id !== projectId);
+    
+    set(state => ({ 
+      projects: [...state.projects, project],
+      notifications: [newNotification, ...state.notifications]
+    }));
 
-    // Find the project to move
-    const projectToMove = state.projects.find(p => p.id === projectId);
-    if (!projectToMove) return state;
-
-    // Get column title to apply business logic
-    const destColumn = state.projectColumns.find(c => c.id === destCol);
-    const destTitle = destColumn ? destColumn.title : '';
-
-    let updatedSubtasks = projectToMove.subtasks ? [...projectToMove.subtasks] : [];
-
-    if (destTitle === 'Completed' || destTitle === 'Delivered') {
-      // Auto-complete all subtasks
-      updatedSubtasks = updatedSubtasks.map(st => ({ ...st, completed: true }));
-    } else if (destTitle === 'In Progress') {
-      // If moving to In Progress and no subtasks are done, mark the first one done to show progress
-      const anyCompleted = updatedSubtasks.some(st => st.completed);
-      if (!anyCompleted && updatedSubtasks.length > 0) {
-        updatedSubtasks[0] = { ...updatedSubtasks[0], completed: true };
-      }
+    // Supabase update
+    await supabase.from('projects').insert([{
+      id: projectData.id,
+      title: projectData.title,
+      description: projectData.description,
+      priority: projectData.priority,
+      due_date: projectData.dueDate,
+      client_name: projectData.clientName,
+      price: projectData.price,
+      material_spec: projectData.materialSpec,
+      column_id: projectData.columnId,
+      assignees: projectData.assignees,
+      attachments_count: projectData.attachmentsCount,
+      comments_count: projectData.commentsCount
+    }]);
+    
+    if (subtasks && subtasks.length > 0) {
+      const stRecords = subtasks.map(st => ({
+        id: st.id, project_id: projectData.id, title: st.title, completed: st.completed, assignee_avatar: st.assigneeAvatar
+      }));
+      await supabase.from('subtasks').insert(stRecords);
     }
+    
+    await supabase.from('notifications').insert([{
+      id: newNotification.id, title: newNotification.title, message: newNotification.message, date: newNotification.date, read: newNotification.read, type: newNotification.type
+    }]);
+  },
 
-    // Update its column and subtasks
-    const updatedProject = { 
-      ...projectToMove, 
-      columnId: destCol,
-      subtasks: updatedSubtasks
-    };
+  updateProject: async (updatedProject) => {
+    set(state => ({
+      projects: state.projects.map(p => p.id === updatedProject.id ? updatedProject : p)
+    }));
+    const { subtasks, ...p } = updatedProject;
+    await supabase.from('projects').update({
+      title: p.title, description: p.description, priority: p.priority, due_date: p.dueDate, client_name: p.clientName,
+      price: p.price, material_spec: p.materialSpec, column_id: p.columnId, assignees: p.assignees,
+      attachments_count: p.attachmentsCount, comments_count: p.commentsCount
+    }).eq('id', p.id);
+  },
 
-    // Insert at new index
-    destProjects.splice(destIdx, 0, updatedProject);
+  softDeleteProject: async (projectId) => {
+    const deletedAt = new Date().toISOString();
+    set(state => ({
+      projects: state.projects.map(p => p.id === projectId ? { ...p, deletedAt } : p)
+    }));
+    await supabase.from('projects').update({ deleted_at: deletedAt }).eq('id', projectId);
+  },
 
-    // Keep all other projects in their original order
-    const otherProjects = state.projects.filter(p => p.columnId !== destCol && p.id !== projectId);
+  updateProjectColumn: async (projectId, columnId) => {
+    set(state => ({
+      projects: state.projects.map(p => p.id === projectId ? { ...p, columnId } : p),
+    }));
+    await supabase.from('projects').update({ column_id: columnId }).eq('id', projectId);
+  },
 
-    return {
-      projects: [...otherProjects, ...destProjects]
-    };
-  }),
-  moveOrder: (orderId, sourceStatus, destStatus, sourceIdx, destIdx) => set((state) => {
-    // Same logic for orders
-    const destOrders = state.orders.filter(o => o.status === destStatus && o.id !== orderId);
-    const orderToMove = state.orders.find(o => o.id === orderId);
-    if (!orderToMove) return state;
+  moveProject: async (projectId, sourceCol, destCol, sourceIdx, destIdx) => {
+    // Note: To keep things simple without complex ordering logic in SQL for now,
+    // we only update the column_id and auto-complete subtasks in Supabase.
+    // The exact visual index ordering isn't persisted securely in this schema yet.
+    
+    set(state => {
+      const destProjects = state.projects.filter(p => p.columnId === destCol && p.id !== projectId);
+      const projectToMove = state.projects.find(p => p.id === projectId);
+      if (!projectToMove) return state;
 
-    const updatedOrder = { ...orderToMove, status: destStatus as OrderStatus };
-    destOrders.splice(destIdx, 0, updatedOrder);
+      const destColumn = state.projectColumns.find(c => c.id === destCol);
+      const destTitle = destColumn ? destColumn.title : '';
 
-    const otherOrders = state.orders.filter(o => o.status !== destStatus && o.id !== orderId);
-    return {
-      orders: [...otherOrders, ...destOrders]
-    };
-  }),
-  addSubtask: (projectId, title) => set((state) => ({
-  projects: state.projects.map(p =>
-    p.id === projectId ? {
-      ...p,
-      subtasks: [...(p.subtasks || []), { id: `st-${Date.now()}`, title, completed: false }]
-    } : p
-  )
-})),
-
-  toggleSubtask: (projectId, subtaskId) => set((state) => ({
-    projects: state.projects.map(p =>
-      p.id === projectId ? {
-        ...p,
-        subtasks: p.subtasks?.map(st => st.id === subtaskId ? { ...st, completed: !st.completed } : st)
-      } : p
-    )
-  })),
-
-  deleteSubtask: (projectId, subtaskId) => set((state) => ({
-    projects: state.projects.map(p => {
-      if (p.id === projectId) {
-        return { ...p, subtasks: p.subtasks?.filter(st => st.id !== subtaskId) };
+      let updatedSubtasks = projectToMove.subtasks ? [...projectToMove.subtasks] : [];
+      if (destTitle === 'Completed' || destTitle === 'Delivered') {
+        updatedSubtasks = updatedSubtasks.map(st => ({ ...st, completed: true }));
+        // Async Supabase update for subtasks
+        supabase.from('subtasks').update({ completed: true }).eq('project_id', projectId).then();
+      } else if (destTitle === 'In Progress') {
+        const anyCompleted = updatedSubtasks.some(st => st.completed);
+        if (!anyCompleted && updatedSubtasks.length > 0) {
+          updatedSubtasks[0] = { ...updatedSubtasks[0], completed: true };
+          supabase.from('subtasks').update({ completed: true }).eq('id', updatedSubtasks[0].id).then();
+        }
       }
-      return p;
-    })
-  })),
-  
-  notifications: [
-    { id: 'n1', title: 'Welcome to Workshop App', message: 'Your shop is ready to go!', date: new Date().toISOString(), read: false, type: 'info' },
-    { id: 'n2', title: 'Low Inventory', message: 'Oak Wood is running low.', date: new Date().toISOString(), read: false, type: 'warning' },
-  ],
-  addNotification: (notification) => set((state) => ({
-    notifications: [
-      { ...notification, id: `NOTIF-${Date.now()}`, date: new Date().toISOString(), read: false },
-      ...state.notifications
-    ]
-  })),
-  markAsRead: (id) => set((state) => ({
-    notifications: state.notifications.map(n => n.id === id ? { ...n, read: true } : n)
-  })),
-  markAllAsRead: () => set((state) => ({
-    notifications: state.notifications.map(n => ({ ...n, read: true }))
-  }))
+
+      const updatedProject = { ...projectToMove, columnId: destCol, subtasks: updatedSubtasks };
+      destProjects.splice(destIdx, 0, updatedProject);
+      const otherProjects = state.projects.filter(p => p.columnId !== destCol && p.id !== projectId);
+      
+      // Async Supabase update for project column
+      supabase.from('projects').update({ column_id: destCol }).eq('id', projectId).then();
+
+      return { projects: [...otherProjects, ...destProjects] };
+    });
+  },
+
+  moveOrder: async (orderId, sourceStatus, destStatus, sourceIdx, destIdx) => {
+    set(state => {
+      const destOrders = state.orders.filter(o => o.status === destStatus && o.id !== orderId);
+      const orderToMove = state.orders.find(o => o.id === orderId);
+      if (!orderToMove) return state;
+
+      const updatedOrder = { ...orderToMove, status: destStatus as OrderStatus };
+      destOrders.splice(destIdx, 0, updatedOrder);
+      const otherOrders = state.orders.filter(o => o.status !== destStatus && o.id !== orderId);
+      
+      supabase.from('orders').update({ status: destStatus }).eq('id', orderId).then();
+
+      return { orders: [...otherOrders, ...destOrders] };
+    });
+  },
+
+  addSubtask: async (projectId, title) => {
+    const newSt = { id: `st-${Date.now()}`, title, completed: false };
+    set(state => ({
+      projects: state.projects.map(p =>
+        p.id === projectId ? { ...p, subtasks: [...(p.subtasks || []), newSt] } : p
+      )
+    }));
+    await supabase.from('subtasks').insert([{ id: newSt.id, project_id: projectId, title: newSt.title, completed: false }]);
+  },
+
+  toggleSubtask: async (projectId, subtaskId) => {
+    let newStatus = false;
+    set(state => ({
+      projects: state.projects.map(p =>
+        p.id === projectId ? {
+          ...p,
+          subtasks: p.subtasks?.map(st => {
+            if (st.id === subtaskId) {
+              newStatus = !st.completed;
+              return { ...st, completed: newStatus };
+            }
+            return st;
+          })
+        } : p
+      )
+    }));
+    await supabase.from('subtasks').update({ completed: newStatus }).eq('id', subtaskId);
+  },
+
+  deleteSubtask: async (projectId, subtaskId) => {
+    set(state => ({
+      projects: state.projects.map(p => p.id === projectId ? { ...p, subtasks: p.subtasks?.filter(st => st.id !== subtaskId) } : p)
+    }));
+    await supabase.from('subtasks').delete().eq('id', subtaskId);
+  },
+
+  updateOrderStatus: async (id, status) => {
+    set(state => ({ orders: state.orders.map(o => o.id === id ? { ...o, status } : o) }));
+    await supabase.from('orders').update({ status }).eq('id', id);
+  },
+
+  addOrder: async (order) => {
+    const newNotif: AppNotification = {
+      id: `NOTIF-${Date.now()}`, title: 'New Order Created', message: `Order ${order.id} for ${order.itemName} added.`, date: new Date().toISOString(), read: false, type: 'success'
+    };
+    set(state => ({ orders: [...state.orders, order], notifications: [newNotif, ...state.notifications] }));
+    
+    await supabase.from('orders').insert([{
+      id: order.id, client_name: order.clientName, item_name: order.itemName, status: order.status, date: order.date,
+      cost_materials: order.cost.materials, cost_labor: order.cost.labor, cost_overhead: order.cost.overhead, price: order.price
+    }]);
+    await supabase.from('notifications').insert([{ id: newNotif.id, title: newNotif.title, message: newNotif.message, date: newNotif.date, read: newNotif.read, type: newNotif.type }]);
+  },
+
+  addClient: async (client) => {
+    const newNotif: AppNotification = {
+      id: `NOTIF-${Date.now()}`, title: 'New Client Added', message: `${client.name} has been added to the directory.`, date: new Date().toISOString(), read: false, type: 'info'
+    };
+    set(state => ({ clients: [...state.clients, client], notifications: [newNotif, ...state.notifications] }));
+    await supabase.from('clients').insert([client]);
+    await supabase.from('notifications').insert([{ id: newNotif.id, title: newNotif.title, message: newNotif.message, date: newNotif.date, read: newNotif.read, type: newNotif.type }]);
+  },
+
+  addVendor: async (vendor) => {
+    set(state => ({ vendors: [...state.vendors, vendor] }));
+    await supabase.from('vendors').insert([vendor]);
+  },
+
+  addPurchaseRequest: async (request) => {
+    set(state => ({ purchaseRequests: [request, ...state.purchaseRequests] }));
+    await supabase.from('purchase_requests').insert([{
+      id: request.id, vendor_name: request.vendorName, date: request.date, status: request.status,
+      total_cost: request.totalCost, notes: request.notes, items: request.items
+    }]);
+  },
+
+  updatePurchaseRequestStatus: async (id, status) => {
+    set(state => ({ purchaseRequests: state.purchaseRequests.map(pr => pr.id === id ? { ...pr, status } : pr) }));
+    await supabase.from('purchase_requests').update({ status }).eq('id', id);
+  },
+
+  updateInventory: async (id, change) => {
+    let newQ = 0;
+    set(state => ({
+      inventory: state.inventory.map(m => {
+        if (m.id === id) {
+          newQ = m.quantity + change;
+          return { ...m, quantity: newQ };
+        }
+        return m;
+      })
+    }));
+    await supabase.from('inventory').update({ quantity: newQ }).eq('id', id);
+  },
+
+  addCategory: (category) => {
+    set(state => ({ categories: [...state.categories, category] }));
+    // Categories are just a local string array for now, unless we want a table for them.
+  },
+
+  updateGoalProgress: async (id, amount) => {
+    let newCurrent = 0;
+    set(state => ({
+      goals: state.goals.map(g => {
+        if (g.id === id) {
+          newCurrent = Math.min(g.target, g.current + amount);
+          return { ...g, current: newCurrent };
+        }
+        return g;
+      })
+    }));
+    await supabase.from('goals').update({ current: newCurrent }).eq('id', id);
+  },
+
+  addNotification: async (notification) => {
+    const newNotif = { ...notification, id: `NOTIF-${Date.now()}`, date: new Date().toISOString(), read: false };
+    set(state => ({ notifications: [newNotif, ...state.notifications] }));
+    await supabase.from('notifications').insert([{ id: newNotif.id, title: newNotif.title, message: newNotif.message, date: newNotif.date, read: newNotif.read, type: newNotif.type }]);
+  },
+
+  markAsRead: async (id) => {
+    set(state => ({ notifications: state.notifications.map(n => n.id === id ? { ...n, read: true } : n) }));
+    await supabase.from('notifications').update({ read: true }).eq('id', id);
+  },
+
+  markAllAsRead: async () => {
+    set(state => ({ notifications: state.notifications.map(n => ({ ...n, read: true })) }));
+    await supabase.from('notifications').update({ read: true }).eq('read', false);
+  }
 }));

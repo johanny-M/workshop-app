@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Dashboard from './pages/Dashboard';
@@ -14,7 +14,13 @@ import Login from './pages/Login';
 import { useStore } from './store/useStore';
 
 const App: React.FC = () => {
-  const { isAuthenticated } = useStore();
+  const { isAuthenticated, init, isInitialized } = useStore();
+
+  useEffect(() => {
+    if (isAuthenticated && !isInitialized) {
+      init();
+    }
+  }, [isAuthenticated, isInitialized, init]);
 
   return (
     <Router>
