@@ -53,12 +53,12 @@ export const AddLeadForm: React.FC<FormProps> = ({ isOpen, onClose }) => {
           <label>Phone Number</label>
           <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="(555) 123-4567" />
         </div>
-        <div className="form-group">
+        <div className="form-group textarea-group">
           <label>Notes</label>
           <textarea rows={3} value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} placeholder="Initial inquiry details..."></textarea>
         </div>
         <div className="modal-actions">
-          <button type="button" className="btn-cancel" onClick={onClose}>Cancel</button>
+          <button type="button" className="btn-cancel" onClick={onClose}>Back</button>
           <button type="submit" className="btn-submit">Save Lead</button>
         </div>
       </form>
@@ -109,7 +109,7 @@ export const NewClientForm: React.FC<FormProps> = ({ isOpen, onClose }) => {
           <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="(555) 000-0000" />
         </div>
         <div className="modal-actions">
-          <button type="button" className="btn-cancel" onClick={onClose}>Cancel</button>
+          <button type="button" className="btn-cancel" onClick={onClose}>Back</button>
           <button type="submit" className="btn-submit">Create Client</button>
         </div>
       </form>
@@ -175,8 +175,8 @@ export const NewProjectForm: React.FC<FormProps> = ({ isOpen, onClose }) => {
           />
         </div>
         <div className="modal-actions">
-          <button type="button" className="btn-cancel" onClick={onClose}>Cancel</button>
-          <button type="submit" className="btn-submit">Create Project</button>
+          <button type="button" className="btn-cancel" onClick={onClose}>Back</button>
+          <button type="submit" className="btn-submit">Start Project</button>
         </div>
       </form>
     </Modal>
@@ -211,10 +211,10 @@ export const NewOrderForm: React.FC<FormProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create New Order">
+    <Modal isOpen={isOpen} onClose={onClose} title="New Purchase">
       <form className="modal-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Order Title</label>
+          <label>Purchase Title</label>
           <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="e.g. Bulk Material Purchase" />
         </div>
         <div className="form-group">
@@ -231,8 +231,8 @@ export const NewOrderForm: React.FC<FormProps> = ({ isOpen, onClose }) => {
           <input required type="number" min="0" step="0.01" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} placeholder="150.00" />
         </div>
         <div className="modal-actions">
-          <button type="button" className="btn-cancel" onClick={onClose}>Cancel</button>
-          <button type="submit" className="btn-submit">Process Order</button>
+          <button type="button" className="btn-cancel" onClick={onClose}>Back</button>
+          <button type="submit" className="btn-submit">Process Purchase</button>
         </div>
       </form>
     </Modal>

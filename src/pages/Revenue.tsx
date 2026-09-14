@@ -21,63 +21,29 @@ const Revenue: React.FC = () => {
   return (
     <>
       {/* KPI Cards Row */}
-      <div className="global-kpi-grid">
-        <div className="dashboard-card kpi-card primary-task-card relative overflow-hidden" style={{ backgroundColor: 'var(--primary)', color: 'var(--bg-main)' }}>
-          <div className="task-card-header mb-2 relative z-10">
-            <span className="task-card-title" style={{ color: 'rgba(255,255,255,0.8)' }}>Total Income (YTD)</span>
+      <div className="kpi-grid">
+        <div className="dashboard-card kpi-card fade-in" style={{ backgroundColor: 'var(--primary)', color: 'var(--bg-main)' }}>
+          <div>
+            <h3 className="kpi-title" style={{ color: 'rgba(255,255,255,0.8)' }}>Total Income (YTD)</h3>
+            <p className="kpi-subtitle" style={{ color: 'rgba(255,255,255,0.7)' }}>+12.5% vs last year</p>
           </div>
-          <div className="flex justify-end items-end relative h-24">
-            <div className="tucked-value-wrapper">
-              <div className="task-card-value tucked-value" style={{ marginBottom: 0 }}>$18,500</div>
-            </div>
-            <div className="flex items-center gap-3 text-white z-10" style={{ position: 'absolute', right: '0', bottom: '0' }}>
-              <div className="flex items-center justify-center rounded-md" style={{ width: '36px', height: '36px', backgroundColor: 'rgba(255,255,255,0.2)' }}>
-                <ArrowUp size={20} strokeWidth={3} />
-              </div>
-              <div style={{ fontSize: '2.25rem', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                +12.5%
-              </div>
-              <span className="flex items-center gap-1 text-sm font-medium opacity-70" style={{ alignSelf: 'flex-end', paddingBottom: '0.25rem' }}>
-                vs last year
-              </span>
-            </div>
-          </div>
+          <div className="kpi-value">$18,500</div>
         </div>
         
-        <div className="dashboard-card kpi-card secondary-task-card relative overflow-hidden">
-          <div className="task-card-header mb-2 relative z-10">
-            <span className="task-card-title text-muted">Avg. Monthly Income</span>
+        <div className="dashboard-card kpi-card fade-in" style={{ animationDelay: '0.05s' }}>
+          <div>
+            <h3 className="kpi-title text-muted">Avg. Monthly Income</h3>
+            <p className="kpi-subtitle" style={{ color: 'var(--success)' }}>+5.2% vs last month</p>
           </div>
-          <div className="flex justify-end items-end relative h-24">
-            <div className="tucked-value-wrapper">
-              <div className="task-card-value tucked-value text-main" style={{ marginBottom: 0 }}>$5,333</div>
-            </div>
-            <div className="flex items-center gap-3 z-10" style={{ position: 'absolute', right: '0', bottom: '0' }}>
-              <div className="flex items-center justify-center rounded-md" style={{ width: '36px', height: '36px', backgroundColor: 'var(--success-transparent)', color: 'var(--success)' }}>
-                <ArrowUp size={20} strokeWidth={3} />
-              </div>
-              <div style={{ fontSize: '2.25rem', fontWeight: 600, color: 'var(--success)', letterSpacing: '-0.02em', lineHeight: 1 }}>
-                +5.2%
-              </div>
-              <span className="flex items-center gap-1 text-sm font-medium text-muted" style={{ alignSelf: 'flex-end', paddingBottom: '0.25rem' }}>
-                vs last month
-              </span>
-            </div>
-          </div>
+          <div className="kpi-value text-main">$5,333</div>
         </div>
 
-        <div className="dashboard-card kpi-card secondary-task-card relative overflow-hidden">
-          <div className="task-card-header mb-2 relative z-10">
-            <span className="task-card-title text-muted">Top Source</span>
+        <div className="dashboard-card kpi-card fade-in" style={{ animationDelay: '0.1s' }}>
+          <div>
+            <h3 className="kpi-title text-muted">Top Source</h3>
+            <p className="kpi-subtitle">45% of total income</p>
           </div>
-          <div className="flex justify-end items-end relative h-24">
-            <div className="tucked-value-wrapper">
-              <div className="task-card-value tucked-value text-main" style={{ marginBottom: 0, fontSize: '4rem' }}>Salary</div>
-            </div>
-            <div className="flex flex-col items-end z-10" style={{ position: 'absolute', right: '0', bottom: '0' }}>
-              <span className="text-sm text-muted font-medium">45% of total</span>
-            </div>
-          </div>
+          <div className="kpi-value text-main">Salary</div>
         </div>
       </div>
 

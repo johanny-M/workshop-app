@@ -4,15 +4,15 @@
   display: flex;
   flex-direction: column;
   padding: 3rem 2%;
-  min-height: calc(100vh - 80px); /* Adjust based on your header height */
-  background-color: var(--bg-main);
+  min-height: calc(100vh - 80px);
+  background-color: var(--kiosk-bg); /* Use theme variable */
   font-family: 'JetBrains Mono', monospace;
 }
 
 .kiosk-header {
   margin-bottom: 3rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color-light); /* Better for dark mode */
 }
 
 .kiosk-title {
@@ -28,7 +28,7 @@
 .kiosk-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 4rem; /* Keeps space for the large lip */
   flex: 1;
   align-content: start;
 }
@@ -45,37 +45,63 @@
   }
 }
 
-/* --- Kiosk Buttons --- */
 .kiosk-btn {
-  background: var(--primary); /* Dark green KPI color */
-  border: none;
-  border-radius: 0; /* No rounded corners as requested */
-  padding: 4rem 2rem; /* Massive padding for POS style */
+  background: var(--kiosk-btn-bg);
+  padding: 2.5rem;
+  border-radius: 0; /* Edged rectangle */
+  border: 1px solid var(--border-color);
+  width: 100%; /* Stretches to fill grid column */
+  min-height: 280px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-height: 250px;
+  transition: all 0.25s ease-out;
+  /* Inner button shadow (Raised) */
+  box-shadow:  10px 10px 20px var(--kiosk-shadow-dark), 
+              -10px -10px 20px var(--kiosk-shadow-light);
+  position: relative;
+  gap: 20px;
 }
 
-.kiosk-btn:hover {
-  transform: translateY(-4px);
-  filter: brightness(1.1);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+/* Base plate (outer lip with ditch) */
+.kiosk-btn::before {
+  content: '';
+  position: absolute;
+  inset: -24px; /* Massive lip */
+  border-radius: 80px; /* Slightly larger border radius for outer lip */
+  background: var(--kiosk-bg); /* Slightly darker than the button in light mode */
+  z-index: -1;
+  /* Outer base drop shadow AND Inner recessed ditch shadow */
+  box-shadow:  
+      20px 20px 40px var(--kiosk-shadow-dark), 
+     -20px -20px 40px var(--kiosk-shadow-light),
+     inset 8px 8px 16px var(--kiosk-shadow-dark),
+     inset -8px -8px 16px var(--kiosk-shadow-light);
+  transition: all 0.25s ease-out;
 }
 
 .kiosk-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  /* Depress only the inner button into the ditch */
+  box-shadow: inset 8px 8px 16px var(--kiosk-shadow-active-dark), 
+              inset -8px -8px 16px var(--kiosk-shadow-active-light);
+}
+
+.kiosk-btn svg {
+  width: 90px;
+  height: 90px;
+  stroke-width: 2;
+  color: var(--primary); 
+  transition: all 0.3s ease;
 }
 
 .kiosk-btn-label {
-  font-weight: 600;
-  font-size: 2rem; /* Big typography */
-  color: white; /* Just text, white on green */
+  font-weight: 500; /* Lighter font weight to match image */
+  font-size: 1.8rem; 
+  color: var(--primary);
   transition: all 0.3s ease;
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
 }

@@ -19,7 +19,7 @@ export const AddExpenseForm: React.FC<FormProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add Expense">
-      <form onSubmit={handleSubmit} className="kiosk-form">
+      <form onSubmit={handleSubmit} className="modal-form">
         <div className="form-group">
           <label>Recipient / Vendor</label>
           <input type="text" placeholder="e.g. Oakwood Lumber Co." value={formData.recipient} onChange={e => setFormData({...formData, recipient: e.target.value})} autoFocus />
@@ -69,7 +69,7 @@ export const AddIncomeForm: React.FC<FormProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add Income">
-      <form onSubmit={handleSubmit} className="kiosk-form">
+      <form onSubmit={handleSubmit} className="modal-form">
         <div className="form-group">
           <label>Client / Sender</label>
           <input type="text" placeholder="e.g. Alex Harper" value={formData.sender} onChange={e => setFormData({...formData, sender: e.target.value})} autoFocus />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStore, Client } from '../store/useStore';
-import { Users, UserPlus, Plus, Building, Mail, Phone, ArrowUpRight, CheckCircle2, TrendingUp, TrendingDown, X, ArrowUp, ArrowDown } from 'lucide-react';
+import { Users, UserPlus, Plus, Building, Mail, Phone, ArrowUpRight, CheckCircle2, TrendingUp, TrendingDown, X, ArrowUp, ArrowDown, Contact, LineChart } from 'lucide-react';
 import './Clients.css';
 
 const Clients: React.FC = () => {
@@ -50,14 +50,17 @@ const Clients: React.FC = () => {
       </div>
 
       <div className="kiosk-grid fade-in">
-        <button className="kiosk-btn" onClick={() => openAddClient('Active')}>
-          <span className="kiosk-btn-label">Add New Client</span>
+        <button className="kiosk-btn" onClick={() => openAddClient('Active')} title="Add Client">
+          <UserPlus />
+          <span className="kiosk-btn-label">Add Client</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setView('directory')}>
-          <span className="kiosk-btn-label">View Client Directory</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.05s' }} onClick={() => setView('directory')} title="Directory">
+          <Contact />
+          <span className="kiosk-btn-label">Directory</span>
         </button>
-        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => alert('View Analytics coming soon!')}>
-          <span className="kiosk-btn-label">View Analytics</span>
+        <button className="kiosk-btn" style={{ animationDelay: '0.1s' }} onClick={() => alert('View Analytics coming soon!')} title="Analytics">
+          <LineChart />
+          <span className="kiosk-btn-label">Analytics</span>
         </button>
       </div>
     </div>
@@ -78,12 +81,11 @@ const Clients: React.FC = () => {
 
       <div className="page-view-toggles mb-6">
         <span className="text-base font-semibold text-muted mr-auto">Filter By Status:</span>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
           {['All', 'Active', 'Lead'].map((status) => (
             <button 
               key={status} 
               className={`view-toggle-btn ${filter === status ? 'active' : ''}`}
-              style={{ fontSize: '1.1rem' }}
               onClick={() => setFilter(status as any)}
             >
               {status}
@@ -132,97 +134,76 @@ const Clients: React.FC = () => {
 
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-          <div className="dashboard-card modal-content max-w-2xl p-6" style={{ maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold" style={{ color: 'var(--text-main)' }}>Add New Client</h2>
-              <button onClick={() => setIsModalOpen(false)} className="btn-icon">
-                <X size={20} />
+          <div className="modal-content scale-in" style={{ maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Add New Client</h2>
+              <button className="btn-icon" onClick={() => setIsModalOpen(false)}>
+                <X size={24} />
               </button>
             </div>
             
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div style={{ gridColumn: 'span 2' }}>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Full Name <span style={{ color: 'var(--danger)' }}>*</span></label>
-                <input
-                  type="text"
-                  value={newClientData.name}
-                  onChange={(e) => setNewClientData({ ...newClientData, name: e.target.value })}
-                  className="w-full form-input"
-                  placeholder="e.g. Jane Doe"
-                  autoFocus
-                  style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface-hover)' }}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Email</label>
-                <input
-                  type="email"
-                  value={newClientData.email}
-                  onChange={(e) => setNewClientData({ ...newClientData, email: e.target.value })}
-                  className="w-full form-input"
-                  placeholder="jane@example.com"
-                  style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface-hover)' }}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Phone</label>
-                <input
-                  type="text"
-                  value={newClientData.phone}
-                  onChange={(e) => setNewClientData({ ...newClientData, phone: e.target.value })}
-                  className="w-full form-input"
-                  placeholder="(555) 000-0000"
-                  style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface-hover)' }}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Company (Optional)</label>
-                <input
-                  type="text"
-                  value={newClientData.company}
-                  onChange={(e) => setNewClientData({ ...newClientData, company: e.target.value })}
-                  className="w-full form-input"
-                  placeholder="Acme Corp"
-                  style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface-hover)' }}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold mb-2" style={{ display: 'block' }}>Status</label>
-                <select
-                  value={newClientData.status}
-                  onChange={(e) => setNewClientData({ ...newClientData, status: e.target.value as any })}
-                  className="w-full form-input"
-                  style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface-hover)' }}
-                >
-                  <option value="Active">Active</option>
-                  <option value="Lead">Lead</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-            </div>
-            
-            <div className="flex justify-end gap-3 mt-8">
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                style={{ padding: '0.5rem 1rem', borderRadius: 'var(--radius-md)', fontWeight: 600, color: 'var(--text-muted)' }}
-                className="hover-text-main"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={handleSaveClient}
-                disabled={!newClientData.name?.trim()}
-                style={{ 
-                  padding: '0.5rem 1.5rem', 
-                  borderRadius: 'var(--radius-md)', 
-                  fontWeight: 600, 
-                  backgroundColor: newClientData.name?.trim() ? 'var(--text-main)' : 'var(--bg-surface-hover)', 
-                  color: newClientData.name?.trim() ? 'var(--bg-main)' : 'var(--text-muted)',
-                  cursor: newClientData.name?.trim() ? 'pointer' : 'not-allowed'
-                }}
-              >
-                Add Client
-              </button>
+            <div className="modal-body">
+              <form className="modal-form" onSubmit={(e) => { e.preventDefault(); handleSaveClient(); }}>
+                <div className="form-group">
+                  <label>Full Name <span style={{ color: 'var(--danger)' }}>*</span></label>
+                  <input
+                    type="text"
+                    value={newClientData.name}
+                    onChange={(e) => setNewClientData({ ...newClientData, name: e.target.value })}
+                    placeholder="e.g. Jane Doe"
+                    autoFocus
+                  />
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div className="form-group">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      value={newClientData.email}
+                      onChange={(e) => setNewClientData({ ...newClientData, email: e.target.value })}
+                      placeholder="jane@example.com"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Phone</label>
+                    <input
+                      type="text"
+                      value={newClientData.phone}
+                      onChange={(e) => setNewClientData({ ...newClientData, phone: e.target.value })}
+                      placeholder="(555) 000-0000"
+                    />
+                  </div>
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div className="form-group">
+                    <label>Company (Optional)</label>
+                    <input
+                      type="text"
+                      value={newClientData.company}
+                      onChange={(e) => setNewClientData({ ...newClientData, company: e.target.value })}
+                      placeholder="Acme Corp"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Status</label>
+                    <select
+                      value={newClientData.status}
+                      onChange={(e) => setNewClientData({ ...newClientData, status: e.target.value as any })}
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                      <option value="Lead">Lead</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div className="modal-actions">
+                  <button type="button" className="btn-cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                  <button type="submit" className="btn-submit" disabled={!newClientData.name?.trim()}>Add Client</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

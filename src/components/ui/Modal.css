@@ -29,34 +29,6 @@
   font-family: 'JetBrains Mono', monospace;
 }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem 3rem; /* Increased padding */
-  border-bottom: 1px solid var(--border-color);
-}
-
-.modal-title {
-  font-size: 2.2rem; /* Increased from 1.5rem */
-  font-weight: 600;
-  color: var(--text-main);
-  margin: 0;
-}
-
-.modal-close-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
 .modal-close-btn:hover {
   background-color: var(--bg-surface-hover);
   color: var(--danger);
@@ -66,87 +38,8 @@
   padding: 3rem; /* Increased from 2rem */
 }
 
-/* Modal Form Styles */
-.modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem; /* Increased gap */
-}
+/* Removed old form styles to prevent conflicts with index.css */
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem; /* Increased gap */
-}
-
-.form-group label {
-  font-size: 1.4rem; /* Increased from 0.9rem */
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea,
-.kiosk-date-input {
-  padding: 1.25rem 1.5rem; /* Increased padding */
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  color: var(--text-main);
-  font-size: 1.3rem; /* Increased from 1rem */
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus,
-.kiosk-date-input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-transparent);
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.btn-cancel {
-  padding: 1rem 2rem; /* Increased padding */
-  background-color: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-main);
-  border-radius: var(--border-radius-md);
-  font-weight: 600;
-  font-size: 1.25rem; /* Increased font size */
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.btn-cancel:hover {
-  background-color: var(--bg-surface-hover);
-}
-
-.btn-submit {
-  padding: 1rem 2.5rem; /* Increased padding */
-  background-color: var(--primary);
-  border: none;
-  color: white;
-  border-radius: var(--border-radius-md);
-  font-weight: 600;
-  font-size: 1.25rem; /* Increased font size */
-  cursor: pointer;
-  transition: filter 0.2s ease;
-}
-
-.btn-submit:hover {
-  filter: brightness(1.1);
-}
-
-/* Animations */
 .scale-in {
   animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
